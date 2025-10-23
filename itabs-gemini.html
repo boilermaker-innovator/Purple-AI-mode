@@ -52,6 +52,7 @@
         input[type="text"],
         input[type="url"],
         input[type="file"],
+        input[type="password"],
         textarea,
         select {
             width: 100%;
@@ -418,12 +419,6 @@
             margin-bottom: 15px;
         }
 
-        .highlight {
-            background: #fff9c4;
-            padding: 2px 5px;
-            border-radius: 3px;
-        }
-
         .free-badge {
             background: #4CAF50;
             color: white;
@@ -451,7 +446,7 @@
         <div class="form-group">
             <label for="apiKey">Your Google API Key (FREE):</label>
             <input type="password" id="apiKey" placeholder="Get free key from ai.google.dev">
-            <small>Get your FREE API key from <a href="https://ai.google.dev/gemini-api/docs/api-key" target="_blank">ai.google.dev</a> - No credit card needed!</small>
+            <small>Get your FREE API key from <a href="https://aistudio.google.com/app/apikey" target="_blank">aistudio.google.com/app/apikey</a> - No credit card needed!</small>
         </div>
 
         <div class="form-group">
@@ -656,7 +651,7 @@
             }
 
             if (!apiKey) {
-                showError('Please enter your Google API key. Get it FREE at ai.google.dev');
+                showError('Please enter your Google API key. Get it FREE at aistudio.google.com/app/apikey');
                 return;
             }
 
@@ -676,10 +671,10 @@
                 const jinaResponse = await fetch(jinaUrl);
                 const pageContent = await jinaResponse.text();
 
-                // Step 2: Send to Gemini API
+                // Step 2: Send to Gemini API - FIXED
                 loadingText.textContent = 'AI is writing your iTabs...';
                 
-                const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+                const geminiUrl = `https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=${apiKey}`;
                 
                 const geminiResponse = await fetch(geminiUrl, {
                     method: 'POST',
