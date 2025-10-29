@@ -460,6 +460,58 @@
         .instruction-box li {
             margin-bottom: 8px;
         }
+
+        .image-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .gallery-image {
+            position: relative;
+            cursor: pointer;
+            border: 3px solid transparent;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .gallery-image:hover {
+            border-color: #2196F3;
+            transform: scale(1.05);
+        }
+
+        .gallery-image.selected {
+            border-color: #4CAF50;
+            box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+        }
+
+        .gallery-image img {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .gallery-checkmark {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: #4CAF50;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .gallery-image.selected .gallery-checkmark {
+            display: flex;
+        }
     </style>
 </head>
 <body>
@@ -493,12 +545,6 @@
             <small>Get your FREE API key from <a href="https://aistudio.google.com/app/apikey" target="_blank">aistudio.google.com/app/apikey</a> - No credit card needed!</small>
         </div>
 
-        <div class="form-group">
-            <label for="imageUrl">Product Image URL:</label>
-            <input type="url" id="imageUrl" value="https://i.ibb.co/391375nn/IMG-3599.jpg" placeholder="https://i.ibb.co/your-image.jpg">
-            <small>✅ Pre-filled with sample image (change if you want)</small>
-        </div>
-
         <div class="button-group">
             <button class="btn-ai-generate" id="aiGenerateBtn">✨ Generate with FREE AI</button>
         </div>
@@ -517,10 +563,29 @@
         <h2>Build Your iTabs Manually</h2>
         
         <div class="form-group">
+            <label>Choose Your Product Image:</label>
+            <small>Select from gallery, upload your own, or paste a URL</small>
+            
+            <div class="image-gallery" id="imageGallery">
+                <!-- Gallery images will be populated here -->
+            </div>
+        </div>
+
+        <div class="or-divider">- OR -</div>
+
+        <div class="form-group">
             <label for="imageFile">Upload Product Image:</label>
             <input type="file" id="imageFile" accept="image/*">
             <small>Choose an image from your device</small>
             <div id="fileStatus" class="file-status">✓ Image loaded and ready</div>
+        </div>
+
+        <div class="or-divider">- OR -</div>
+
+        <div class="form-group">
+            <label for="imageUrl">Product Image URL:</label>
+            <input type="url" id="imageUrl" placeholder="https://i.ibb.co/your-image.jpg">
+            <small>Paste a direct link to your image</small>
         </div>
 
         <div class="warning-message" id="imageWarning" style="display: none;">
@@ -623,9 +688,24 @@
     </div>
 
     <script>
+        // Gallery images - Replace these URLs with your actual image URLs
+        const galleryImages = [
+            'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400',
+            'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400',
+            'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=400',
+            'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400',
+            'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=400',
+            'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400',
+            'https://i.ibb.co/391375nn/IMG-3599.jpg',
+            'https://images.unsplash.com/photo-1560393464-5c69a73c5770?w=400'
+        ];
+
         let uploadedImageData = null;
+        let selectedGalleryImage = null;
 
         document.addEventListener('DOMContentLoaded', function() {
+            initializeGallery();
+            
             const generateBtn = document.getElementById('generateBtn');
             const aiGenerateBtn = document.getElementById('aiGenerateBtn');
             const clearBtn = document.getElementById('clearBtn');
@@ -653,6 +733,7 @@
                         uploadedImageData = event.target.result;
                         fileStatus.classList.add('show');
                         document.getElementById('imageUrl').value = '';
+                        clearGallerySelection();
                     };
                     reader.readAsDataURL(file);
                 } else {
@@ -666,6 +747,7 @@
                     imageFile.value = '';
                     uploadedImageData = null;
                     fileStatus.classList.remove('show');
+                    clearGallerySelection();
                 }
             });
             
@@ -680,10 +762,41 @@
             });
         });
 
+        function initializeGallery() {
+            const gallery = document.getElementById('imageGallery');
+            galleryImages.forEach((imageUrl, index) => {
+                const galleryItem = document.createElement('div');
+                galleryItem.className = 'gallery-image';
+                galleryItem.innerHTML = `
+                    <img src="${imageUrl}" alt="Gallery image ${index + 1}">
+                    <div class="gallery-checkmark">✓</div>
+                `;
+                galleryItem.addEventListener('click', () => selectGalleryImage(galleryItem, imageUrl));
+                gallery.appendChild(galleryItem);
+            });
+        }
+
+        function selectGalleryImage(element, imageUrl) {
+            clearGallerySelection();
+            element.classList.add('selected');
+            selectedGalleryImage = imageUrl;
+            
+            document.getElementById('imageFile').value = '';
+            document.getElementById('imageUrl').value = '';
+            uploadedImageData = null;
+            document.getElementById('fileStatus').classList.remove('show');
+        }
+
+        function clearGallerySelection() {
+            document.querySelectorAll('.gallery-image').forEach(img => {
+                img.classList.remove('selected');
+            });
+            selectedGalleryImage = null;
+        }
+
         async function aiGenerate() {
             const campaignUrl = document.getElementById('campaignUrl').value.trim();
             const apiKey = document.getElementById('apiKey').value.trim();
-            const imageUrl = document.getElementById('imageUrl').value.trim();
             const errorMessage = document.getElementById('errorMessage');
             const loading = document.getElementById('loading');
             const loadingText = document.getElementById('loadingText');
@@ -699,26 +812,19 @@
                 return;
             }
 
-            if (!imageUrl) {
-                showError('Please enter a product image URL');
-                return;
-            }
-
             errorMessage.classList.remove('active');
             loading.classList.add('active');
             aiGenerateBtn.disabled = true;
 
             try {
-                // Step 1: Read URL with Jina
                 loadingText.textContent = 'Reading campaign page...';
                 const jinaUrl = `https://r.jina.ai/${campaignUrl}`;
                 const jinaResponse = await fetch(jinaUrl);
                 const pageContent = await jinaResponse.text();
 
-                // Step 2: Send to Gemini API - FIXED WITH STABLE MODEL
                 loadingText.textContent = 'AI is writing your iTabs...';
                 
-                const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+                const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`;
                 
                 const geminiResponse = await fetch(geminiUrl, {
                     method: 'POST',
@@ -755,7 +861,6 @@ Please respond in this exact JSON format:
                 const geminiData = await geminiResponse.json();
                 const responseText = geminiData.candidates[0].content.parts[0].text;
                 
-                // Extract JSON from response
                 const jsonMatch = responseText.match(/\{[\s\S]*\}/);
                 if (!jsonMatch) {
                     throw new Error('Could not parse AI response');
@@ -763,7 +868,6 @@ Please respond in this exact JSON format:
                 
                 const aiContent = JSON.parse(jsonMatch[0]);
 
-                // Fill in the form
                 document.getElementById('section1').value = aiContent.section1;
                 document.getElementById('section2').value = aiContent.section2;
                 document.getElementById('section3').value = aiContent.section3;
@@ -799,14 +903,17 @@ Please respond in this exact JSON format:
             const imageWarning = document.getElementById('imageWarning');
             const imageUrlInput = document.getElementById('imageUrl');
 
-            if (uploadedImageData) {
+            if (selectedGalleryImage) {
+                imageSource = selectedGalleryImage;
+                imageWarning.style.display = 'none';
+            } else if (uploadedImageData) {
                 imageSource = uploadedImageData;
                 imageWarning.style.display = 'block';
             } else if (imageUrlInput.value.trim() !== '') {
                 imageSource = imageUrlInput.value.trim();
                 imageWarning.style.display = 'none';
             } else {
-                alert('Please upload an image or enter an image URL');
+                alert('Please select an image from the gallery, upload an image, or enter an image URL');
                 return;
             }
 
@@ -843,7 +950,7 @@ Please respond in this exact JSON format:
             document.getElementById('popupButton').textContent = buttonText;
             document.getElementById('popupButton').href = buttonLink;
             
-            let codeImageUrl = uploadedImageData ? 'YOUR-IMAGE-URL-HERE' : imageUrlInput.value.trim();
+            let codeImageUrl = uploadedImageData ? 'YOUR-IMAGE-URL-HERE' : imageSource;
             const code = generateCode(codeImageUrl, overlayText, overlayPosition, section1, section2, section3, section4, buttonText, buttonLink);
             document.getElementById('codeBox').textContent = code;
             
@@ -920,7 +1027,7 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('campaignUrl').value = 'https://www.birchal.com/company/bioanalytics';
             document.getElementById('apiKey').value = '';
             document.getElementById('imageFile').value = '';
-            document.getElementById('imageUrl').value = 'https://i.ibb.co/391375nn/IMG-3599.jpg';
+            document.getElementById('imageUrl').value = '';
             document.getElementById('overlayText').value = 'Click the i for more info';
             document.getElementById('overlayPosition').value = 'center';
             document.getElementById('section1').value = '';
@@ -933,6 +1040,7 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('imageWarning').style.display = 'none';
             document.getElementById('fileStatus').classList.remove('show');
             document.getElementById('errorMessage').classList.remove('active');
+            clearGallerySelection();
             uploadedImageData = null;
         }
         
