@@ -537,7 +537,607 @@
         color: #2c3e50;
     }
 
-    /* Preview iTabs Styles */
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+        .hero h1 {
+            font-size: 2em;
+        }
+        
+        .hero p {
+            font-size: 1.1em;
+        }
+
+        .form-section {
+            padding: 20px;
+        }
+
+        .button-group {
+            flex-direction: column;
+        }
+
+        button {
+            width: 100%;
+        }
+    }
+</style>
+```
+
+</head>
+<body>
+    <!-- Hero Section -->
+    <div class="hero">
+        <h1>iTabs Story Enhancer<span class="free-badge">100% FREE</span></h1>
+        <p>Transform any article, story, or content into an educational experience with AI-powered iTabs</p>
+    </div>
+
+```
+<!-- Main Container -->
+<div class="container">
+    <!-- Instructions -->
+    <div class="instruction-box">
+        <h3>🚀 How It Works:</h3>
+        <ol>
+            <li>Paste any article, story, or text content below</li>
+            <li>Get your <strong>FREE</strong> Google API key from <a href="https://aistudio.google.com/app/apikey" target="_blank">aistudio.google.com/app/apikey</a></li>
+            <li>Choose your audience level and what terms to explain</li>
+            <li>AI automatically identifies confusing terms and creates iTabs for them</li>
+            <li>Get back your enhanced content with clickable [i] buttons</li>
+            <li>Copy the HTML and use it anywhere!</li>
+        </ol>
+        <div class="demo-note">
+            💡 See the blue "i" buttons below? Click them to understand how this tool works!
+        </div>
+    </div>
+
+    <!-- Input Section -->
+    <div class="form-section ai-section">
+        <h2>✨ Paste Your Content</h2>
+        
+        <div class="form-group">
+            <label for="storyInput">📝 Your Article/Story/Content:</label>
+            <textarea id="storyInput" class="story-input" placeholder="Paste your content here... Can be an article, blog post, story, textbook chapter, technical document, etc.">iTabs is revolutionizing how people learn online by transforming confusing content into educational experiences. Think of it as "Tooltips 2.0" - those little question mark icons on forms don't work on mobile devices and can't handle complex information. iTabs solves this with clickable information buttons that open rich popups containing images, videos, and interactive content.
+```
+
+The platform works as educational infrastructure. When you encounter jargon or technical terminology while reading, clicking an iTabs button provides instant context without disrupting your reading flow. This creates micro-learning moments - small educational experiences that compound as you read. Students can learn advanced concepts while studying, professionals can understand industry-specific language, and general audiences can access complex topics that were previously gatekept by specialized knowledge.
+
+The ecosystem approach is what makes iTabs scalable. Instead of building proprietary software, the tools are freely available. Content creators can use AI-powered generators to add iTabs to any article, blog post, or document. This crowdsourced model means the entire internet can become more accessible and educational. Whether you’re reading about cryptocurrency, climate science, or medical research, iTabs buttons can explain blockchain technology, carbon sequestration, or clinical trials in plain language with visual examples.</textarea>
+<small><span style="color: #28a745; font-weight: 600;">✅ Pre-filled with sample text</span> (replace with your own content)</small>
+</div>
+
+```
+        <div class="form-group">
+            <label for="audienceLevel">
+                👥 Target Audience Level
+                <button class="itab-inline" onclick="showHelp('audience')">i</button>
+            </label>
+            <select id="audienceLevel">
+                <option value="general">General Public (explain everything)</option>
+                <option value="highschool" selected>High School Students (moderate detail)</option>
+                <option value="college">College Students (technical but accessible)</option>
+                <option value="expert">Experts (minimal explanations)</option>
+            </select>
+            <small>This determines how many terms get iTabs and how detailed the explanations are</small>
+        </div>
+
+        <div class="form-group">
+            <label>
+                🎯 Create iTabs For
+                <button class="itab-inline" onclick="showHelp('terms')">i</button>
+            </label>
+            <div class="checkbox-group">
+                <label>
+                    <input type="checkbox" id="techTerms" checked>
+                    <span>Technical terms & jargon (recommended)</span>
+                </label>
+                <label>
+                    <input type="checkbox" id="concepts" checked>
+                    <span>Complex concepts & ideas</span>
+                </label>
+                <label>
+                    <input type="checkbox" id="acronyms" checked>
+                    <span>Acronyms & abbreviations (like QE, GDP, DNA)</span>
+                </label>
+                <label>
+                    <input type="checkbox" id="names">
+                    <span>Names & places (optional - for younger readers)</span>
+                </label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="customPrompt">
+                🤖 AI Instructions (Advanced)
+                <button class="itab-inline" onclick="showHelp('prompt')">i</button>
+            </label>
+            <textarea id="customPrompt" class="prompt-area" placeholder="Leave blank for default behavior, or customize...">Identify technical and complex terms that a ${AUDIENCE} might not understand. For each term, create a clear, concise explanation with examples where helpful. Focus on making the content accessible without dumbing it down.</textarea>
+            <small>Advanced: Customize how AI identifies and explains terms</small>
+        </div>
+
+        <div class="form-group">
+            <label for="apiKey">
+                🔑 Your Google API Key (FREE)
+                <button class="itab-inline" onclick="showHelp('api-key')">i</button>
+            </label>
+            <input type="password" id="apiKey" placeholder="Paste your FREE Google API key here">
+            <small>Get it at <a href="https://aistudio.google.com/app/apikey" target="_blank">aistudio.google.com/app/apikey</a> - Takes 2 minutes, no credit card!</small>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-enhance" id="enhanceBtn">✨ Enhance with iTabs</button>
+            <button class="btn-clear" id="clearBtn">🔄 Clear</button>
+        </div>
+
+        <div class="loading" id="loading">
+            <div class="loading-spinner"></div>
+            <p id="loadingText">AI is analyzing your content...</p>
+        </div>
+
+        <div class="error-message" id="errorMessage"></div>
+    </div>
+
+    <!-- Results Section -->
+    <div class="results-section" id="resultsSection">
+        <h2>✨ Your Enhanced Content</h2>
+        
+        <div class="stats-box" id="statsBox">
+            <h4>📊 Enhancement Summary:</h4>
+            <ul id="statsList"></ul>
+        </div>
+
+        <div class="preview-box">
+            <h3>👀 Preview (click the blue "i" buttons):</h3>
+            <div class="enhanced-content" id="previewContent"></div>
+        </div>
+
+        <div class="code-section">
+            <h3>📋 Copy This HTML Code</h3>
+            <p class="code-instruction">Paste this code into your website, blog, or learning platform:</p>
+            <div class="code-box" id="codeBox"></div>
+            <button class="btn-copy" id="copyBtn">📋 Copy Code to Clipboard</button>
+            <div class="success-message" id="successMessage">✅ Code copied to clipboard!</div>
+        </div>
+    </div>
+</div>
+
+<!-- Help Popups -->
+<div class="itabs-help-popup" id="helpPopupAudience">
+    <div class="itabs-help-content">
+        <div class="itabs-help-header">
+            <h3>👥 Choosing Your Audience</h3>
+            <button class="itabs-help-close" onclick="closeHelp('audience')">&times;</button>
+        </div>
+        <div class="itabs-help-body">
+            <p><strong>Why this matters:</strong> Different audiences need different levels of explanation. A college professor doesn't need "inflation" explained, but a high school student might.</p>
+            
+            <h4>General Public:</h4>
+            <p>• Creates iTabs for almost everything technical<br>
+            • Very detailed, simple explanations<br>
+            • Perfect for: News articles, general interest content, blogs</p>
+            
+            <h4>High School Students:</h4>
+            <p>• Balanced approach - explains key concepts<br>
+            • Assumes basic knowledge, explains advanced topics<br>
+            • Perfect for: Educational content, textbooks, study materials</p>
+            
+            <h4>College Students:</h4>
+            <p>• Fewer iTabs, focuses on specialized terms<br>
+            • More technical explanations<br>
+            • Perfect for: Academic articles, technical writing, research</p>
+            
+            <h4>Experts:</h4>
+            <p>• Minimal iTabs, only very specialized terms<br>
+            • Brief, precise explanations<br>
+            • Perfect for: Professional journals, technical documentation</p>
+            
+            <div class="example-box">
+                <strong>Example:</strong> The word "inflation"<br>
+                • General Public: Gets iTabs<br>
+                • High School: Gets iTabs<br>
+                • College: No iTabs (assumed knowledge)<br>
+                • Expert: No iTabs
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="itabs-help-popup" id="helpPopupTerms">
+    <div class="itabs-help-content">
+        <div class="itabs-help-header">
+            <h3>🎯 What Terms to Explain</h3>
+            <button class="itabs-help-close" onclick="closeHelp('terms')">&times;</button>
+        </div>
+        <div class="itabs-help-body">
+            <p><strong>You control what gets explained.</strong> Check the boxes for the types of terms you want iTabs created for:</p>
+            
+            <h4>✅ Technical Terms & Jargon</h4>
+            <p>Industry-specific language that general audiences won't know.</p>
+            <div class="example-box">
+                <strong>Examples:</strong> "quantitative easing", "blockchain", "photosynthesis", "due process"
+            </div>
+            
+            <h4>✅ Complex Concepts</h4>
+            <p>Ideas that require explanation even if the words are familiar.</p>
+            <div class="example-box">
+                <strong>Examples:</strong> "supply and demand", "natural selection", "cognitive dissonance"
+            </div>
+            
+            <h4>✅ Acronyms & Abbreviations</h4>
+            <p>Letters that stand for longer terms.</p>
+            <div class="example-box">
+                <strong>Examples:</strong> "GDP", "DNA", "HVAC", "CEO", "ASAP"
+            </div>
+            
+            <h4>□ Names & Places (Optional)</h4>
+            <p>People, organizations, locations. Usually only needed for younger readers or unfamiliar topics.</p>
+            <div class="example-box">
+                <strong>Examples:</strong> "Federal Reserve", "Silicon Valley", "WHO" (organization)
+            </div>
+            
+            <p style="margin-top: 20px;"><strong>Tip:</strong> Start with all boxes checked except Names & Places. You can always adjust if you get too many or too few iTabs!</p>
+        </div>
+    </div>
+</div>
+
+<div class="itabs-help-popup" id="helpPopupPrompt">
+    <div class="itabs-help-content">
+        <div class="itabs-help-header">
+            <h3>🤖 Customizing AI Behavior</h3>
+            <button class="itabs-help-close" onclick="closeHelp('prompt')">&times;</button>
+        </div>
+        <div class="itabs-help-body">
+            <p><strong>Advanced users:</strong> You can customize exactly how AI identifies terms and writes explanations.</p>
+            
+            <p><strong>Default behavior works great for most cases.</strong> But if you want specific control:</p>
+            
+            <h4>Examples of Custom Instructions:</h4>
+            
+            <div class="example-box">
+                <strong>For science content:</strong><br>
+                "Identify scientific terms and explain them using everyday analogies. Include why each concept matters in real life."
+            </div>
+            
+            <div class="example-box">
+                <strong>For business content:</strong><br>
+                "Focus on financial and business jargon. Explain with concrete examples from well-known companies."
+            </div>
+            
+            <div class="example-box">
+                <strong>For children's content:</strong><br>
+                "Identify any word a 10-year-old might not know. Explain in very simple language with fun examples."
+            </div>
+            
+            <div class="example-box">
+                <strong>For technical docs:</strong><br>
+                "Only identify highly specialized terms. Keep explanations brief and precise. Include links to official documentation."
+            </div>
+            
+            <p style="margin-top: 20px;"><strong>Pro tip:</strong> The more specific your instructions, the better AI performs. But the default prompt works well for 90% of cases!</p>
+        </div>
+    </div>
+</div>
+
+<div class="itabs-help-popup" id="helpPopupApiKey">
+    <div class="itabs-help-content">
+        <div class="itabs-help-header">
+            <h3>🔑 Google API Key</h3>
+            <button class="itabs-help-close" onclick="closeHelp('api-key')">&times;</button>
+        </div>
+        <div class="itabs-help-body">
+            <p><strong>What it is:</strong> A free password that lets this tool use Google's AI to analyze your content and create iTabs.</p>
+            
+            <p><strong>Why you need it:</strong> The AI reads your content, identifies confusing terms, and generates clear explanations. Without it, the tool can't work.</p>
+            
+            <p><strong>How to get yours (2 minutes):</strong></p>
+            <ol>
+                <li>Go to <a href="https://aistudio.google.com/app/apikey" target="_blank">aistudio.google.com/app/apikey</a></li>
+                <li>Sign in with Google account</li>
+                <li>Click "Create API Key"</li>
+                <li>Copy the key (looks like: AIzaSyB...)</li>
+                <li>Paste it above</li>
+            </ol>
+            
+            <p><strong>Is it free?</strong> Yes! Google gives you plenty of free AI requests per month. No credit card required.</p>
+            
+            <p><strong>Is it safe?</strong> Yes - your API key only works for Google AI. This tool doesn't store it. It's only used during your session.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Help popup functions
+    function showHelp(helpType) {
+        const helpMap = {
+            'audience': 'helpPopupAudience',
+            'terms': 'helpPopupTerms',
+            'prompt': 'helpPopupPrompt',
+            'api-key': 'helpPopupApiKey'
+        };
+        const popupId = helpMap[helpType];
+        const popup = document.getElementById(popupId);
+        if (popup) {
+            popup.classList.add('active');
+        }
+    }
+
+    function closeHelp(helpType) {
+        const helpMap = {
+            'audience': 'helpPopupAudience',
+            'terms': 'helpPopupTerms',
+            'prompt': 'helpPopupPrompt',
+            'api-key': 'helpPopupApiKey'
+        };
+        const popupId = helpMap[helpType];
+        const popup = document.getElementById(popupId);
+        if (popup) {
+            popup.classList.remove('active');
+        }
+    }
+
+    // Close help popup when clicking outside
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('itabs-help-popup')) {
+            e.target.classList.remove('active');
+        }
+    });
+
+    // Main functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('DOM loaded, attaching event listeners...');
+        
+        const enhanceBtn = document.getElementById('enhanceBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const copyBtn = document.getElementById('copyBtn');
+
+        console.log('Buttons found:', {
+            enhanceBtn: !!enhanceBtn,
+            clearBtn: !!clearBtn,
+            copyBtn: !!copyBtn
+        });
+
+        if (enhanceBtn) {
+            enhanceBtn.addEventListener('click', enhanceContent);
+            console.log('Enhance button listener attached');
+        } else {
+            console.error('Enhance button not found!');
+        }
+        
+        if (clearBtn) {
+            clearBtn.addEventListener('click', clearForm);
+            console.log('Clear button listener attached');
+        } else {
+            console.error('Clear button not found!');
+        }
+        
+        if (copyBtn) {
+            copyBtn.addEventListener('click', copyCode);
+            console.log('Copy button listener attached');
+        } else {
+            console.error('Copy button not found!');
+        }
+    });
+
+    async function enhanceContent() {
+        console.log('Enhance button clicked!');
+        
+        const storyInput = document.getElementById('storyInput').value.trim();
+        const apiKey = document.getElementById('apiKey').value.trim();
+        const audienceLevel = document.getElementById('audienceLevel').value;
+        const customPrompt = document.getElementById('customPrompt').value.trim();
+        
+        const techTerms = document.getElementById('techTerms').checked;
+        const concepts = document.getElementById('concepts').checked;
+        const acronyms = document.getElementById('acronyms').checked;
+        const names = document.getElementById('names').checked;
+
+        const loading = document.getElementById('loading');
+        const loadingText = document.getElementById('loadingText');
+        const errorMessage = document.getElementById('errorMessage');
+
+        // Validation
+        if (!storyInput) {
+            showError('Please paste some content to enhance');
+            return;
+        }
+
+        if (!apiKey) {
+            showError('Please enter your Google API key. Get it FREE at aistudio.google.com/app/apikey');
+            return;
+        }
+
+        // Show loading
+        errorMessage.classList.remove('active');
+        loading.classList.add('active');
+        enhanceBtn.disabled = true;
+
+        try {
+            loadingText.textContent = '🔍 AI is analyzing your content...';
+
+            // Build the prompt
+            const termTypes = [];
+            if (techTerms) termTypes.push('technical terms and jargon');
+            if (concepts) termTypes.push('complex concepts');
+            if (acronyms) termTypes.push('acronyms and abbreviations');
+            if (names) termTypes.push('names and places');
+
+            const audienceDescriptions = {
+                'general': 'general public who may not have specialized knowledge',
+                'highschool': 'high school students with basic education',
+                'college': 'college students with some advanced knowledge',
+                'expert': 'experts in the field who understand most terminology'
+            };
+
+            const basePrompt = customPrompt || `Identify ${termTypes.join(', ')} that ${audienceDescriptions[audienceLevel]} might not understand. For each term, create a clear, concise explanation suitable for this audience level.`;
+
+            const fullPrompt = `${basePrompt}
+```
+
+Content to analyze:
+${storyInput}
+
+Please respond in this EXACT JSON format:
+{
+“terms”: [
+{
+“term”: “exact term from text”,
+“explanation”: “clear explanation for the target audience”
+}
+]
+}
+
+Important: Find 5-15 terms depending on content complexity and audience level. More terms for general audience, fewer for experts.`;
+
+```
+            loadingText.textContent = '✨ Creating iTabs explanations...';
+
+            const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+            
+            const response = await fetch(geminiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    contents: [{
+                        parts: [{
+                            text: fullPrompt
+                        }]
+                    }]
+                })
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error('AI error: ' + (errorData.error?.message || response.statusText));
+            }
+
+            const data = await response.json();
+            const responseText = data.candidates[0].content.parts[0].text;
+            
+            // Parse JSON response
+            const jsonMatch = responseText.match(/\{[\s\S]*\}/);
+            if (!jsonMatch) {
+                throw new Error('Could not parse AI response');
+            }
+            
+            const result = JSON.parse(jsonMatch[0]);
+
+            // Generate enhanced content
+            generateEnhancedContent(storyInput, result.terms);
+
+            loading.classList.remove('active');
+            enhanceBtn.disabled = false;
+            document.getElementById('resultsSection').classList.add('active');
+            document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
+
+        } catch (error) {
+            loading.classList.remove('active');
+            enhanceBtn.disabled = false;
+            showError('Error: ' + error.message);
+            console.error(error);
+        }
+    }
+
+    function generateEnhancedContent(originalText, terms) {
+        let enhancedText = originalText;
+        let termCount = 0;
+        
+        // Create iTabs popups HTML
+        let popupsHTML = '';
+        
+        terms.forEach((term, index) => {
+            const termId = `term${index}`;
+            
+            // Try to find and replace the term in text (case insensitive)
+            const regex = new RegExp(`\\b(${escapeRegex(term.term)})\\b`, 'gi');
+            const matches = enhancedText.match(regex);
+            
+            if (matches && matches.length > 0) {
+                termCount++;
+                // Only replace first occurrence - use data attribute instead of onclick
+                enhancedText = enhancedText.replace(regex, `$1 <button class="itab-btn" data-term-id="${termId}">i</button>`);
+                
+                // Add popup HTML
+                popupsHTML += `
+```
+
+<div class="itab-popup" id="${termId}">
+    <div class="itab-popup-content">
+        <button class="itab-close" data-close-id="${termId}">&times;</button>
+        <h3>${term.term}</h3>
+        <p>${term.explanation}</p>
+    </div>
+</div>`;
+                }
+            });
+
+```
+        // Update stats
+        const statsList = document.getElementById('statsList');
+        statsList.innerHTML = `
+            <li><strong>${termCount}</strong> iTabs created</li>
+            <li><strong>${terms.length}</strong> terms identified by AI</li>
+            <li><strong>${originalText.split(' ').length}</strong> words in original content</li>
+        `;
+
+        // Show preview
+        const previewContent = document.getElementById('previewContent');
+        previewContent.innerHTML = enhancedText + popupsHTML;
+
+        // Add event listeners to preview buttons after content is inserted
+        setTimeout(() => {
+            document.querySelectorAll('.itab-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const termId = this.getAttribute('data-term-id');
+                    document.getElementById(termId).classList.add('active');
+                });
+            });
+
+            document.querySelectorAll('.itab-close').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const termId = this.getAttribute('data-close-id');
+                    document.getElementById(termId).classList.remove('active');
+                });
+            });
+
+            // Close on outside click
+            document.querySelectorAll('.itab-popup').forEach(popup => {
+                popup.addEventListener('click', function(e) {
+                    if (e.target === popup) {
+                        popup.classList.remove('active');
+                    }
+                });
+            });
+        }, 100);
+
+        // Generate full HTML code
+        const fullCode = generateFullHTML(enhancedText, popupsHTML);
+        document.getElementById('codeBox').textContent = fullCode;
+    }
+
+    function escapeRegex(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
+    function generateFullHTML(content, popups) {
+        return `<!DOCTYPE html>
+```
+
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Content with iTabs</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            line-height: 1.8;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            color: #333;
+        }
+
+```
     .itab-btn {
         display: inline-flex;
         align-items: center;
@@ -624,302 +1224,86 @@
         background: #f0f0f0;
         color: #333;
     }
-
-    /* Mobile Responsive */
-    @media (max-width: 768px) {
-        .hero h1 {
-            font-size: 2em;
-        }
-        
-        .hero p {
-            font-size: 1.1em;
-        }
-
-        .form-section {
-            padding: 20px;
-        }
-
-        .button-group {
-            flex-direction: column;
-        }
-
-        button {
-            width: 100%;
-        }
-    }
 </style>
 ```
 
 </head>
 <body>
-    <!-- Hero Section -->
-    <div class="hero">
-        <h1>iTabs Story Enhancer<span class="free-badge">100% FREE</span></h1>
-        <p>Transform any article, story, or content into an educational experience with AI-powered iTabs</p>
-    </div>
+    ${content}
 
 ```
-<!-- Main Container -->
-<div class="container">
-    <!-- Instructions -->
-    <div class="instruction-box">
-        <h3>🚀 How It Works:</h3>
-        <ol>
-            <li>Paste any article, story, or text content below</li>
-            <li>Get your <strong>FREE</strong> Google API key from <a href="https://aistudio.google.com/app/apikey" target="_blank">aistudio.google.com/app/apikey</a></li>
-            <li>Choose your audience level and what terms to explain</li>
-            <li>AI automatically identifies confusing terms and creates iTabs for them</li>
-            <li>Get back your enhanced content with clickable [i] buttons</li>
-            <li>Copy the HTML and use it anywhere!</li>
-        </ol>
-        <div class="demo-note">
-            💡 See the blue "i" buttons below? Click them to understand how this tool works!
-        </div>
-    </div>
-
-    <!-- Input Section -->
-    <div class="form-section ai-section">
-        <h2>✨ Paste Your Content</h2>
-        
-        <div class="form-group">
-            <label for="storyInput">📝 Your Article/Story/Content:</label>
-            <textarea id="storyInput" class="story-input" placeholder="Paste your content here...">iTabs is revolutionizing how people learn online by transforming confusing content into educational experiences. Think of it as "Tooltips 2.0" - those little question mark icons on forms don't work on mobile devices and can't handle complex information. iTabs solves this with clickable information buttons that open rich popups containing images, videos, and interactive content.
-```
-
-The platform works as educational infrastructure. When you encounter jargon or technical terminology while reading, clicking an iTabs button provides instant context without disrupting your reading flow. This creates micro-learning moments - small educational experiences that compound as you read. Students can learn advanced concepts while studying, professionals can understand industry-specific language, and general audiences can access complex topics that were previously gatekept by specialized knowledge.
-
-The ecosystem approach is what makes iTabs scalable. Instead of building proprietary software, the tools are freely available. Content creators can use AI-powered generators to add iTabs to any article, blog post, or document. This crowdsourced model means the entire internet can become more accessible and educational. Whether you’re reading about cryptocurrency, climate science, or medical research, iTabs buttons can explain blockchain technology, carbon sequestration, or clinical trials in plain language with visual examples.</textarea>
-<small><span style="color: #28a745; font-weight: 600;">✅ Pre-filled with sample text about iTabs</span></small>
-</div>
-
-```
-        <div class="form-group">
-            <label for="audienceLevel">
-                👥 Target Audience Level
-                <button class="itab-inline" onclick="showHelp('audience')">i</button>
-            </label>
-            <select id="audienceLevel">
-                <option value="general">General Public (explain everything)</option>
-                <option value="highschool" selected>High School Students (moderate detail)</option>
-                <option value="college">College Students (technical but accessible)</option>
-                <option value="expert">Experts (minimal explanations)</option>
-            </select>
-            <small>This determines how many terms get iTabs and how detailed the explanations are</small>
-        </div>
-
-        <div class="form-group">
-            <label>
-                🎯 Create iTabs For
-                <button class="itab-inline" onclick="showHelp('terms')">i</button>
-            </label>
-            <div class="checkbox-group">
-                <label>
-                    <input type="checkbox" id="techTerms" checked>
-                    <span>Technical terms & jargon (recommended)</span>
-                </label>
-                <label>
-                    <input type="checkbox" id="concepts" checked>
-                    <span>Complex concepts & ideas</span>
-                </label>
-                <label>
-                    <input type="checkbox" id="acronyms" checked>
-                    <span>Acronyms & abbreviations</span>
-                </label>
-                <label>
-                    <input type="checkbox" id="names">
-                    <span>Names & places (optional)</span>
-                </label>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label for="customPrompt">
-                🤖 AI Instructions (Advanced)
-                <button class="itab-inline" onclick="showHelp('prompt')">i</button>
-            </label>
-            <textarea id="customPrompt" class="prompt-area" placeholder="Leave blank for default...">Identify technical and complex terms that a ${AUDIENCE} might not understand. Create clear, concise explanations with examples where helpful.</textarea>
-            <small>Advanced: Customize how AI identifies and explains terms</small>
-        </div>
-
-        <div class="form-group">
-            <label for="apiKey">
-                🔑 Your Google API Key (FREE)
-                <button class="itab-inline" onclick="showHelp('api-key')">i</button>
-            </label>
-            <input type="password" id="apiKey" placeholder="Paste your FREE Google API key here">
-            <small>Get it at <a href="https://aistudio.google.com/app/apikey" target="_blank">aistudio.google.com/app/apikey</a> - Takes 2 minutes!</small>
-        </div>
-
-        <div class="button-group">
-            <button class="btn-enhance" id="enhanceBtn">✨ Enhance with iTabs</button>
-            <button class="btn-clear" id="clearBtn">🔄 Clear</button>
-        </div>
-
-        <div class="loading" id="loading">
-            <div class="loading-spinner"></div>
-            <p id="loadingText">AI is analyzing your content...</p>
-        </div>
-
-        <div class="error-message" id="errorMessage"></div>
-    </div>
-
-    <!-- Results Section -->
-    <div class="results-section" id="resultsSection">
-        <h2>✨ Your Enhanced Content</h2>
-        
-        <div class="stats-box" id="statsBox">
-            <h4>📊 Enhancement Summary:</h4>
-            <ul id="statsList"></ul>
-        </div>
-
-        <div class="preview-box">
-            <h3>👀 Preview (click the blue "i" buttons):</h3>
-            <div class="enhanced-content" id="previewContent"></div>
-        </div>
-
-        <div class="code-section">
-            <h3>📋 Copy This HTML Code</h3>
-            <p class="code-instruction">Paste this code into your website, blog, or learning platform:</p>
-            <div class="code-box" id="codeBox"></div>
-            <button class="btn-copy" id="copyBtn">📋 Copy Code to Clipboard</button>
-            <div class="success-message" id="successMessage">✅ Code copied!</div>
-        </div>
-    </div>
-</div>
-
-<!-- Help Popups (abbreviated for space) -->
-<div class="itabs-help-popup" id="helpPopupAudience">
-    <div class="itabs-help-content">
-        <div class="itabs-help-header">
-            <h3>👥 Choosing Your Audience</h3>
-            <button class="itabs-help-close" onclick="closeHelp('audience')">&times;</button>
-        </div>
-        <div class="itabs-help-body">
-            <p><strong>Different audiences need different levels of explanation.</strong></p>
-            <p>• <strong>General Public:</strong> Explains almost everything<br>
-            • <strong>High School:</strong> Balanced approach<br>
-            • <strong>College:</strong> Fewer iTabs, more technical<br>
-            • <strong>Experts:</strong> Minimal explanations</p>
-        </div>
-    </div>
-</div>
-
-<div class="itabs-help-popup" id="helpPopupTerms">
-    <div class="itabs-help-content">
-        <div class="itabs-help-header">
-            <h3>🎯 What Terms to Explain</h3>
-            <button class="itabs-help-close" onclick="closeHelp('terms')">&times;</button>
-        </div>
-        <div class="itabs-help-body">
-            <p><strong>Choose what types of terms get iTabs:</strong></p>
-            <p>• <strong>Technical Terms:</strong> Industry jargon<br>
-            • <strong>Concepts:</strong> Complex ideas<br>
-            • <strong>Acronyms:</strong> GDP, DNA, etc.<br>
-            • <strong>Names:</strong> Optional for younger readers</p>
-        </div>
-    </div>
-</div>
-
-<div class="itabs-help-popup" id="helpPopupPrompt">
-    <div class="itabs-help-content">
-        <div class="itabs-help-header">
-            <h3>🤖 AI Instructions</h3>
-            <button class="itabs-help-close" onclick="closeHelp('prompt')">&times;</button>
-        </div>
-        <div class="itabs-help-body">
-            <p><strong>Customize how AI identifies and explains terms.</strong></p>
-            <p>The default works great, but you can customize for specific audiences or topics.</p>
-        </div>
-    </div>
-</div>
-
-<div class="itabs-help-popup" id="helpPopupApiKey">
-    <div class="itabs-help-content">
-        <div class="itabs-help-header">
-            <h3>🔑 Google API Key</h3>
-            <button class="itabs-help-close" onclick="closeHelp('api-key')">&times;</button>
-        </div>
-        <div class="itabs-help-body">
-            <p><strong>A free password for Google AI.</strong></p>
-            <p>Get it at <a href="https://aistudio.google.com/app/apikey" target="_blank">aistudio.google.com/app/apikey</a></p>
-            <p>✅ Free forever<br>
-            ✅ No credit card<br>
-            ✅ Takes 2 minutes</p>
-        </div>
-    </div>
-</div>
+${popups}
 
 <script>
-    console.log('iTabs Story Enhancer loading...');
+    function showTerm(termId) {
+        document.getElementById(termId).classList.add('active');
+    }
     
-    // Help popup functions
-    function showHelp(helpType) {
-        const helpMap = {
-            'audience': 'helpPopupAudience',
-            'terms': 'helpPopupTerms',
-            'prompt': 'helpPopupPrompt',
-            'api-key': 'helpPopupApiKey'
-        };
-        const popup = document.getElementById(helpMap[helpType]);
-        if (popup) popup.classList.add('active');
+    function closeTerm(termId) {
+        document.getElementById(termId).classList.remove('active');
     }
-
-    function closeHelp(helpType) {
-        const helpMap = {
-            'audience': 'helpPopupAudience',
-            'terms': 'helpPopupTerms',
-            'prompt': 'helpPopupPrompt',
-            'api-key': 'helpPopupApiKey'
-        };
-        const popup = document.getElementById(helpMap[helpType]);
-        if (popup) popup.classList.remove('active');
-    }
-
-    // Close help on outside click
-    document.addEventListener('click', function(e) {
-        if (e.target.classList.contains('itabs-help-popup')) {
-            e.target.classList.remove('active');
+    
+    // Close on outside click
+    document.querySelectorAll('.itab-popup').forEach(popup => {
+        popup.addEventListener('click', function(e) {
+            if (e.target === popup) {
+                popup.classList.remove('active');
+            }
+        });
+    });
+    
+    // Close on escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            document.querySelectorAll('.itab-popup').forEach(popup => {
+                popup.classList.remove('active');
+            });
         }
     });
+</scr` + `ipt>
+```
 
-    // Wait for DOM
-    document.addEventListener('DOMContentLoaded', function() {
-        console.log('DOM loaded, setting up buttons...');
+</body>
+</html>`;
+        }
+
+```
+    function showError(message) {
+        const errorMessage = document.getElementById('errorMessage');
+        errorMessage.textContent = message;
+        errorMessage.classList.add('active');
+    }
+
+    function clearForm() {
+        console.log('Clear button clicked!');
         
-        const enhanceBtn = document.getElementById('enhanceBtn');
-        const clearBtn = document.getElementById('clearBtn');
-        const copyBtn = document.getElementById('copyBtn');
+        document.getElementById('storyInput').value = 'iTabs is revolutionizing how people learn online by transforming confusing content into educational experiences. Think of it as "Tooltips 2.0" - those little question mark icons on forms don\'t work on mobile devices and can\'t handle complex information. iTabs solves this with clickable information buttons that open rich popups containing images, videos, and interactive content.\n\nThe platform works as educational infrastructure. When you encounter jargon or technical terminology while reading, clicking an iTabs button provides instant context without disrupting your reading flow. This creates micro-learning moments - small educational experiences that compound as you read. Students can learn advanced concepts while studying, professionals can understand industry-specific language, and general audiences can access complex topics that were previously gatekept by specialized knowledge.\n\nThe ecosystem approach is what makes iTabs scalable. Instead of building proprietary software, the tools are freely available. Content creators can use AI-powered generators to add iTabs to any article, blog post, or document. This crowdsourced model means the entire internet can become more accessible and educational. Whether you\'re reading about cryptocurrency, climate science, or medical research, iTabs buttons can explain blockchain technology, carbon sequestration, or clinical trials in plain language with visual examples.';
+        document.getElementById('apiKey').value = '';
+        document.getElementById('audienceLevel').value = 'highschool';
+        document.getElementById('customPrompt').value = 'Identify technical and complex terms that a ${AUDIENCE} might not understand. For each term, create a clear, concise explanation with examples where helpful. Focus on making the content accessible without dumbing it down.';
+        document.getElementById('techTerms').checked = true;
+        document.getElementById('concepts').checked = true;
+        document.getElementById('acronyms').checked = true;
+        document.getElementById('names').checked = false;
+        document.getElementById('resultsSection').classList.remove('active');
+        document.getElementById('errorMessage').classList.remove('active');
+    }
 
-        if (enhanceBtn) {
-            enhanceBtn.onclick = function() {
-                console.log('Enhance clicked');
-                alert('Feature coming soon! This will use AI to enhance your content with iTabs.');
-            };
-        }
-
-        if (clearBtn) {
-            clearBtn.onclick = function() {
-                console.log('Clear clicked');
-                document.getElementById('storyInput').value = 'iTabs is revolutionizing how people learn online...';
-                document.getElementById('apiKey').value = '';
-                document.getElementById('resultsSection').classList.remove('active');
-            };
-        }
-
-        if (copyBtn) {
-            copyBtn.onclick = function() {
-                console.log('Copy clicked');
-                const codeBox = document.getElementById('codeBox');
-                navigator.clipboard.writeText(codeBox.textContent);
-                document.getElementById('successMessage').classList.add('active');
-                setTimeout(() => {
-                    document.getElementById('successMessage').classList.remove('active');
-                }, 3000);
-            };
-        }
-
-        console.log('All buttons ready!');
-    });
+    function copyCode() {
+        const codeBox = document.getElementById('codeBox');
+        const textArea = document.createElement('textarea');
+        textArea.value = codeBox.textContent;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        
+        const successMessage = document.getElementById('successMessage');
+        successMessage.classList.add('active');
+        setTimeout(() => {
+            successMessage.classList.remove('active');
+        }, 3000);
+    }
 </script>
 ```
 
