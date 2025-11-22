@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iTabs Story Enhancer - Make Any Content Educational</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+```
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+        background: #f8f9fa;
+        line-height: 1.6;
+    }
+
+    /* Hero Section */
+    .hero {
+        background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+        color: white;
+        text-align: center;
+        padding: 60px 20px 40px 20px;
+    }
+    
+    .hero h1 {
+        font-size: 2.5em;
+        margin-bottom: 15px;
+        font-weight: 700;
+    }
+    
+    .hero p {
+        font-size: 1.3em;
+        opacity: 0.95;
+        max-width: 700px;
+        margin: 0 auto;
+    }
+
+    .free-badge {
+        background: #4CAF50;
+        color: white;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 0.5em;
+        font-weight: bold;
+        margin-left: 10px;
+        vertical-align: middle;
+    }
+
+    /* iTabs Button Style */
+    .itab-inline {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 20px;
+        height: 20px;
+        background: #3498db;
+        color: white;
+        border-radius: 50%;
+        font-size: 14px;
+        font-weight: bold;
+        cursor: pointer;
+        margin-left: 8px;
+        transition: all 0.3s ease;
+        vertical-align: middle;
+        border: none;
+        font-family: serif;
+    }
+
+    .itab-inline:hover {
+        background: #2980b9;
+        transform: scale(1.15);
+    }
+
+    /* iTabs Popup */
+    .itabs-help-popup {
+        display: none;
+        position: fixed;
+        z-index: 10000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .itabs-help-popup.active {
+        display: flex;
+    }
+
+    .itabs-help-content {
+        position: relative;
+        background-color: white;
+        border-radius: 20px;
+        width: 90%;
+        max-width: 600px;
+        max-height: 80vh;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        overflow: hidden;
+    }
+
+    .itabs-help-header {
+        background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+        color: white;
+        padding: 25px 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .itabs-help-header h3 {
+        margin: 0;
+        font-size: 1.5em;
+    }
+
+    .itabs-help-close {
+        color: white;
+        font-size: 35px;
+        font-weight: bold;
+        cursor: pointer;
+        background: none;
+        border: none;
+        width: 35px;
+        height: 35px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        transition: all 0.3s;
+    }
+
+    .itabs-help-close:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: rotate(90deg);
+    }
+
+    .itabs-help-body {
+        padding: 30px;
+        max-height: calc(80vh - 100px);
+        overflow-y: auto;
+    }
+
+    .itabs-help-body p {
+        color: #4a5568;
+        font-size: 1.05em;
+        line-height: 1.8;
+        margin-bottom: 15px;
+    }
+
+    .itabs-help-body strong {
+        color: #2c3e50;
+    }
+
+    .itabs-help-body ul {
+        margin-left: 20px;
+        margin-bottom: 15px;
+    }
+
+    .itabs-help-body li {
+        margin-bottom: 8px;
+    }
+
+    .itabs-help-body .example-box {
+        background: #e8f4f8;
+        padding: 15px;
+        border-radius: 8px;
+        margin: 15px 0;
+        border-left: 4px solid #3498db;
+    }
+
+    /* Container */
+    .container {
+        max-width: 1000px;
+        margin: -20px auto 40px auto;
+        padding: 0 20px;
+    }
+
+    /* Instruction Box */
+    .instruction-box {
+        background: white;
+        border-left: 4px solid #4285F4;
+        padding: 20px;
+        margin-bottom: 30px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .instruction-box h3 {
+        color: #4285F4;
+        margin-bottom: 15px;
+        font-size: 1.3em;
+    }
+
+    .instruction-box ol {
+        margin-left: 20px;
+        color: #333;
+    }
+
+    .instruction-box li {
+        margin-bottom: 10px;
+        line-height: 1.6;
+    }
+
+    .instruction-box .demo-note {
+        margin-top: 15px;
+        padding: 15px;
+        background: #e8f4f8;
+        border-radius: 8px;
+        color: #2980b9;
+        font-weight: 600;
+    }
+
+    /* Form Section */
+    .form-section {
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        margin-bottom: 25px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .form-section h2 {
+        color: #333;
+        margin-bottom: 25px;
+        font-size: 1.8em;
+        border-bottom: 3px solid #3498db;
+        padding-bottom: 10px;
+    }
+
+    .ai-section {
+        background: linear-gradient(135deg, #E8F4F8 0%, #D6EAF8 100%);
+        border: 2px solid #3498db;
+    }
+
+    .ai-section h2 {
+        color: #3498db;
+    }
+
+    .form-group {
+        margin-bottom: 25px;
+    }
+    
+    label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: #333;
+        font-size: 1.05em;
+    }
+    
+    input[type="text"],
+    input[type="password"],
+    textarea,
+    select {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #ddd;
+        border-radius: 6px;
+        font-size: 15px;
+        font-family: Arial, sans-serif;
+        transition: border-color 0.3s;
+    }
+
+    input[type="text"]:focus,
+    input[type="password"]:focus,
+    textarea:focus,
+    select:focus {
+        outline: none;
+        border-color: #3498db;
+    }
+    
+    textarea {
+        resize: vertical;
+        font-family: inherit;
+    }
+
+    textarea.story-input {
+        min-height: 200px;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    textarea.prompt-area {
+        min-height: 100px;
+        background: #f8f9fa;
+        font-family: 'Courier New', monospace;
+        font-size: 14px;
+    }
+    
+    small {
+        color: #666;
+        display: block;
+        margin-top: 6px;
+        font-size: 13px;
+        line-height: 1.4;
+    }
+
+    .checkbox-group {
+        margin-top: 10px;
+    }
+
+    .checkbox-group label {
+        display: flex;
+        align-items: center;
+        font-weight: normal;
+        margin-bottom: 8px;
+        cursor: pointer;
+    }
+
+    .checkbox-group input[type="checkbox"] {
+        width: auto;
+        margin-right: 10px;
+        cursor: pointer;
+    }
+
+    /* Buttons */
+    .button-group {
+        display: flex;
+        gap: 15px;
+        margin-top: 25px;
+    }
+    
+    button {
+        padding: 15px 30px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: bold;
+        transition: all 0.3s;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    }
+
+    button:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+    }
+    
+    .btn-enhance {
+        background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+        color: white;
+        flex: 1;
+        font-size: 18px;
+    }
+
+    .btn-enhance:hover:not(:disabled) {
+        background: linear-gradient(135deg, #2980b9 0%, #21618c 100%);
+    }
+    
+    .btn-clear {
+        background: #f44336;
+        color: white;
+    }
+    
+    .btn-clear:hover {
+        background: #da190b;
+    }
+    
+    .btn-copy {
+        background: #2196F3;
+        color: white;
+        width: 100%;
+    }
+    
+    .btn-copy:hover {
+        background: #0b7dda;
+    }
+
+    /* Loading State */
+    .loading {
+        display: none;
+        text-align: center;
+        padding: 25px;
+        color: #666;
+    }
+
+    .loading.active {
+        display: block;
+    }
+
+    .loading-spinner {
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #3498db;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 15px;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    /* Messages */
+    .error-message {
+        background: #f8d7da;
+        border: 2px solid #f5c6cb;
+        color: #721c24;
+        padding: 15px;
+        border-radius: 6px;
+        margin-top: 15px;
+        display: none;
+    }
+
+    .error-message.active {
+        display: block;
+    }
+
+    .success-message {
+        display: none;
+        background: #4CAF50;
+        color: white;
+        padding: 12px;
+        border-radius: 6px;
+        margin-top: 15px;
+        text-align: center;
+        font-weight: 600;
+    }
+    
+    .success-message.active {
+        display: block;
+    }
+
+    /* Results Section */
+    .results-section {
+        display: none;
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        margin-bottom: 25px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    
+    .results-section.active {
+        display: block;
+    }
+
+    .results-section h2 {
+        color: #333;
+        margin-bottom: 20px;
+        font-size: 1.8em;
+    }
+
+    .preview-box {
+        background: #f8f9fa;
+        padding: 25px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        border: 2px solid #e0e0e0;
+    }
+
+    .preview-box h3 {
+        color: #3498db;
+        margin-bottom: 15px;
+        font-size: 1.3em;
+    }
+
+    .enhanced-content {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        line-height: 1.8;
+        font-size: 1.05em;
+        max-height: 400px;
+        overflow-y: auto;
+    }
+
+    .code-section {
+        margin-top: 30px;
+    }
+
+    .code-section h3 {
+        color: #333;
+        margin-bottom: 10px;
+        font-size: 1.5em;
+    }
+
+    .code-instruction {
+        color: #666;
+        margin-bottom: 15px;
+        font-size: 1.05em;
+    }
+    
+    .code-box {
+        background: #2d3748;
+        color: #e2e8f0;
+        border-radius: 8px;
+        padding: 20px;
+        font-family: 'Courier New', monospace;
+        font-size: 13px;
+        max-height: 400px;
+        overflow-y: auto;
+        margin-bottom: 15px;
+        word-wrap: break-word;
+        white-space: pre-wrap;
+        line-height: 1.5;
+    }
+
+    .stats-box {
+        background: #e8f4f8;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+
+    .stats-box h4 {
+        color: #2980b9;
+        margin-bottom: 10px;
+    }
+
+    .stats-box ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .stats-box li {
+        padding: 5px 0;
+        color: #4a5568;
+    }
+
+    .stats-box strong {
+        color: #2c3e50;
+    }
+
+    /* Preview iTabs Styles */
+    .itab-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 18px;
+        height: 18px;
+        background: #3498db;
+        color: white;
+        border-radius: 50%;
+        font-size: 12px;
+        font-weight: bold;
+        cursor: pointer;
+        margin: 0 2px;
+        border: none;
+        vertical-align: middle;
+        font-family: serif;
+        transition: all 0.3s;
+    }
+    
+    .itab-btn:hover {
+        background: #2980b9;
+        transform: scale(1.15);
+    }
+    
+    .itab-popup {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+    
+    .itab-popup.active {
+        display: flex;
+    }
+    
+    .itab-popup-content {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        max-width: 500px;
+        width: 90%;
+        position: relative;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    }
+    
+    .itab-popup-content h3 {
+        color: #3498db;
+        margin-bottom: 15px;
+        font-size: 1.4em;
+    }
+    
+    .itab-popup-content p {
+        color: #4a5568;
+        line-height: 1.6;
+        font-size: 1.05em;
+    }
+    
+    .itab-close {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: none;
+        border: none;
+        font-size: 30px;
+        color: #999;
+        cursor: pointer;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        transition: all 0.3s;
+    }
+    
+    .itab-close:hover {
+        background: #f0f0f0;
+        color: #333;
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+        .hero h1 {
+            font-size: 2em;
+        }
+        
+        .hero p {
+            font-size: 1.1em;
+        }
+
+        .form-section {
+            padding: 20px;
+        }
+
+        .button-group {
+            flex-direction: column;
+        }
+
+        button {
+            width: 100%;
+        }
+    }
+</style>
+```
+
+</head>
+<body>
+    <!-- Hero Section -->
+    <div class="hero">
+        <h1>iTabs Story Enhancer<span class="free-badge">100% FREE</span></h1>
+        <p>Transform any article, story, or content into an educational experience with AI-powered iTabs</p>
+    </div>
+
+```
+<!-- Main Container -->
+<div class="container">
+    <!-- Instructions -->
+    <div class="instruction-box">
+        <h3>🚀 How It Works:</h3>
+        <ol>
+            <li>Paste any article, story, or text content below</li>
+            <li>Get your <strong>FREE</strong> Google API key from <a href="https://aistudio.google.com/app/apikey" target="_blank">aistudio.google.com/app/apikey</a></li>
+            <li>Choose your audience level and what terms to explain</li>
+            <li>AI automatically identifies confusing terms and creates iTabs for them</li>
+            <li>Get back your enhanced content with clickable [i] buttons</li>
+            <li>Copy the HTML and use it anywhere!</li>
+        </ol>
+        <div class="demo-note">
+            💡 See the blue "i" buttons below? Click them to understand how this tool works!
+        </div>
+    </div>
+
+    <!-- Input Section -->
+    <div class="form-section ai-section">
+        <h2>✨ Paste Your Content</h2>
+        
+        <div class="form-group">
+            <label for="storyInput">📝 Your Article/Story/Content:</label>
+            <textarea id="storyInput" class="story-input" placeholder="Paste your content here...">iTabs is revolutionizing how people learn online by transforming confusing content into educational experiences. Think of it as "Tooltips 2.0" - those little question mark icons on forms don't work on mobile devices and can't handle complex information. iTabs solves this with clickable information buttons that open rich popups containing images, videos, and interactive content.
+```
+
+The platform works as educational infrastructure. When you encounter jargon or technical terminology while reading, clicking an iTabs button provides instant context without disrupting your reading flow. This creates micro-learning moments - small educational experiences that compound as you read. Students can learn advanced concepts while studying, professionals can understand industry-specific language, and general audiences can access complex topics that were previously gatekept by specialized knowledge.
+
+The ecosystem approach is what makes iTabs scalable. Instead of building proprietary software, the tools are freely available. Content creators can use AI-powered generators to add iTabs to any article, blog post, or document. This crowdsourced model means the entire internet can become more accessible and educational. Whether you’re reading about cryptocurrency, climate science, or medical research, iTabs buttons can explain blockchain technology, carbon sequestration, or clinical trials in plain language with visual examples.</textarea>
+<small><span style="color: #28a745; font-weight: 600;">✅ Pre-filled with sample text about iTabs</span></small>
+</div>
+
+```
+        <div class="form-group">
+            <label for="audienceLevel">
+                👥 Target Audience Level
+                <button class="itab-inline" onclick="showHelp('audience')">i</button>
+            </label>
+            <select id="audienceLevel">
+                <option value="general">General Public (explain everything)</option>
+                <option value="highschool" selected>High School Students (moderate detail)</option>
+                <option value="college">College Students (technical but accessible)</option>
+                <option value="expert">Experts (minimal explanations)</option>
+            </select>
+            <small>This determines how many terms get iTabs and how detailed the explanations are</small>
+        </div>
+
+        <div class="form-group">
+            <label>
+                🎯 Create iTabs For
+                <button class="itab-inline" onclick="showHelp('terms')">i</button>
+            </label>
+            <div class="checkbox-group">
+                <label>
+                    <input type="checkbox" id="techTerms" checked>
+                    <span>Technical terms & jargon (recommended)</span>
+                </label>
+                <label>
+                    <input type="checkbox" id="concepts" checked>
+                    <span>Complex concepts & ideas</span>
+                </label>
+                <label>
+                    <input type="checkbox" id="acronyms" checked>
+                    <span>Acronyms & abbreviations</span>
+                </label>
+                <label>
+                    <input type="checkbox" id="names">
+                    <span>Names & places (optional)</span>
+                </label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="customPrompt">
+                🤖 AI Instructions (Advanced)
+                <button class="itab-inline" onclick="showHelp('prompt')">i</button>
+            </label>
+            <textarea id="customPrompt" class="prompt-area" placeholder="Leave blank for default...">Identify technical and complex terms that a ${AUDIENCE} might not understand. Create clear, concise explanations with examples where helpful.</textarea>
+            <small>Advanced: Customize how AI identifies and explains terms</small>
+        </div>
+
+        <div class="form-group">
+            <label for="apiKey">
+                🔑 Your Google API Key (FREE)
+                <button class="itab-inline" onclick="showHelp('api-key')">i</button>
+            </label>
+            <input type="password" id="apiKey" placeholder="Paste your FREE Google API key here">
+            <small>Get it at <a href="https://aistudio.google.com/app/apikey" target="_blank">aistudio.google.com/app/apikey</a> - Takes 2 minutes!</small>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-enhance" id="enhanceBtn">✨ Enhance with iTabs</button>
+            <button class="btn-clear" id="clearBtn">🔄 Clear</button>
+        </div>
+
+        <div class="loading" id="loading">
+            <div class="loading-spinner"></div>
+            <p id="loadingText">AI is analyzing your content...</p>
+        </div>
+
+        <div class="error-message" id="errorMessage"></div>
+    </div>
+
+    <!-- Results Section -->
+    <div class="results-section" id="resultsSection">
+        <h2>✨ Your Enhanced Content</h2>
+        
+        <div class="stats-box" id="statsBox">
+            <h4>📊 Enhancement Summary:</h4>
+            <ul id="statsList"></ul>
+        </div>
+
+        <div class="preview-box">
+            <h3>👀 Preview (click the blue "i" buttons):</h3>
+            <div class="enhanced-content" id="previewContent"></div>
+        </div>
+
+        <div class="code-section">
+            <h3>📋 Copy This HTML Code</h3>
+            <p class="code-instruction">Paste this code into your website, blog, or learning platform:</p>
+            <div class="code-box" id="codeBox"></div>
+            <button class="btn-copy" id="copyBtn">📋 Copy Code to Clipboard</button>
+            <div class="success-message" id="successMessage">✅ Code copied!</div>
+        </div>
+    </div>
+</div>
+
+<!-- Help Popups (abbreviated for space) -->
+<div class="itabs-help-popup" id="helpPopupAudience">
+    <div class="itabs-help-content">
+        <div class="itabs-help-header">
+            <h3>👥 Choosing Your Audience</h3>
+            <button class="itabs-help-close" onclick="closeHelp('audience')">&times;</button>
+        </div>
+        <div class="itabs-help-body">
+            <p><strong>Different audiences need different levels of explanation.</strong></p>
+            <p>• <strong>General Public:</strong> Explains almost everything<br>
+            • <strong>High School:</strong> Balanced approach<br>
+            • <strong>College:</strong> Fewer iTabs, more technical<br>
+            • <strong>Experts:</strong> Minimal explanations</p>
+        </div>
+    </div>
+</div>
+
+<div class="itabs-help-popup" id="helpPopupTerms">
+    <div class="itabs-help-content">
+        <div class="itabs-help-header">
+            <h3>🎯 What Terms to Explain</h3>
+            <button class="itabs-help-close" onclick="closeHelp('terms')">&times;</button>
+        </div>
+        <div class="itabs-help-body">
+            <p><strong>Choose what types of terms get iTabs:</strong></p>
+            <p>• <strong>Technical Terms:</strong> Industry jargon<br>
+            • <strong>Concepts:</strong> Complex ideas<br>
+            • <strong>Acronyms:</strong> GDP, DNA, etc.<br>
+            • <strong>Names:</strong> Optional for younger readers</p>
+        </div>
+    </div>
+</div>
+
+<div class="itabs-help-popup" id="helpPopupPrompt">
+    <div class="itabs-help-content">
+        <div class="itabs-help-header">
+            <h3>🤖 AI Instructions</h3>
+            <button class="itabs-help-close" onclick="closeHelp('prompt')">&times;</button>
+        </div>
+        <div class="itabs-help-body">
+            <p><strong>Customize how AI identifies and explains terms.</strong></p>
+            <p>The default works great, but you can customize for specific audiences or topics.</p>
+        </div>
+    </div>
+</div>
+
+<div class="itabs-help-popup" id="helpPopupApiKey">
+    <div class="itabs-help-content">
+        <div class="itabs-help-header">
+            <h3>🔑 Google API Key</h3>
+            <button class="itabs-help-close" onclick="closeHelp('api-key')">&times;</button>
+        </div>
+        <div class="itabs-help-body">
+            <p><strong>A free password for Google AI.</strong></p>
+            <p>Get it at <a href="https://aistudio.google.com/app/apikey" target="_blank">aistudio.google.com/app/apikey</a></p>
+            <p>✅ Free forever<br>
+            ✅ No credit card<br>
+            ✅ Takes 2 minutes</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    console.log('iTabs Story Enhancer loading...');
+    
+    // Help popup functions
+    function showHelp(helpType) {
+        const helpMap = {
+            'audience': 'helpPopupAudience',
+            'terms': 'helpPopupTerms',
+            'prompt': 'helpPopupPrompt',
+            'api-key': 'helpPopupApiKey'
+        };
+        const popup = document.getElementById(helpMap[helpType]);
+        if (popup) popup.classList.add('active');
+    }
+
+    function closeHelp(helpType) {
+        const helpMap = {
+            'audience': 'helpPopupAudience',
+            'terms': 'helpPopupTerms',
+            'prompt': 'helpPopupPrompt',
+            'api-key': 'helpPopupApiKey'
+        };
+        const popup = document.getElementById(helpMap[helpType]);
+        if (popup) popup.classList.remove('active');
+    }
+
+    // Close help on outside click
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('itabs-help-popup')) {
+            e.target.classList.remove('active');
+        }
+    });
+
+    // Wait for DOM
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('DOM loaded, setting up buttons...');
+        
+        const enhanceBtn = document.getElementById('enhanceBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const copyBtn = document.getElementById('copyBtn');
+
+        if (enhanceBtn) {
+            enhanceBtn.onclick = function() {
+                console.log('Enhance clicked');
+                alert('Feature coming soon! This will use AI to enhance your content with iTabs.');
+            };
+        }
+
+        if (clearBtn) {
+            clearBtn.onclick = function() {
+                console.log('Clear clicked');
+                document.getElementById('storyInput').value = 'iTabs is revolutionizing how people learn online...';
+                document.getElementById('apiKey').value = '';
+                document.getElementById('resultsSection').classList.remove('active');
+            };
+        }
+
+        if (copyBtn) {
+            copyBtn.onclick = function() {
+                console.log('Copy clicked');
+                const codeBox = document.getElementById('codeBox');
+                navigator.clipboard.writeText(codeBox.textContent);
+                document.getElementById('successMessage').classList.add('active');
+                setTimeout(() => {
+                    document.getElementById('successMessage').classList.remove('active');
+                }, 3000);
+            };
+        }
+
+        console.log('All buttons ready!');
+    });
+</script>
+```
+
+</body>
+</html>
