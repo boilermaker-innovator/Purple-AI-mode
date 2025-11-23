@@ -1,26 +1,107 @@
 <!DOCTYPE html>
-
-<html>
+<html lang="en">
 <head>
-    <title>Button Test</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>iTabs 2.0 × Your Photo Edition</title>
+  <style>
+    body { font-family: system-ui, sans-serif; line-height: 1.6; max-width: 800px; margin: 2rem auto; padding: 1rem; }
+    .itab { cursor: help; position: relative; display: inline-block; }
+    .itab-btn { background:#0066ff; color:white; width:20px; height:20px; border-radius:50%;
+                 font-weight:bold; font-size:12px; line-height:20px; text-align:center;
+                 display:inline-block; margin-left:4px; transition:all .2s; }
+    .itab-btn:hover { transform:scale(1.2); background:#0044cc; }
+    .itab-popup { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75);
+                  justify-content:center; align-items:center; z-index:9999; }
+    .popup-content { background:white; padding:2rem; border-radius:12px; max-width:540px;
+                     position:relative; animation:pop .3s; box-shadow:0 20px 40px rgba(0,0,0,0.3); }
+    @keyframes pop { from{transform:scale(0.8);opacity:0} to{transform:scale(1);opacity:1} }
+    .close { position:absolute; top:8px; right:14px; font-size:32px; cursor:pointer; }
+    img.itab-photo { max-width:100%; height:auto; border-radius:10px; margin:1rem 0; }
+  </style>
 </head>
 <body>
-    <h1>Button Test</h1>
 
-```
-<button id="testBtn" style="padding:20px; font-size:20px; background:blue; color:white;">
-    Click Me
-</button>
+<h1>Computer Science in Plain English + Real People</h1>
 
-<p id="result"></p>
+<p>
+  An <span class="itab" data-term="algorithm">algorithm<i class="itab-btn">i</i></span> 
+  is just a recipe. Every program runs on 
+  <span class="itab" data-term="hardware">hardware<i class="itab-btn">i</i></span>. 
+  If the hardware can simulate any other machine, it’s 
+  <span class="itab" data-term="turing-complete">Turing-complete<i class="itab-btn">i</i></span>.
+  And behind every line of code there’s a real human — like this 
+  <span class="itab" data-term="real-coder">legend<i class="itab-btn">i</i></span> taking a break on site.
+</p>
+
+<!-- Single popup container -->
+<div class="itab-popup" id="itabOverlay">
+  <div class="popup-content" role="dialog" aria-modal="true" aria-labelledby="popupTitle">
+    <span class="close" onclick="closePopup()" aria-label="Close">×</span>
+    <h3 id="popupTitle"></h3>
+    <div id="popupBody"></div>
+    <p style="margin-top:1.5rem; text-align:center;">
+      <small>Powered by <a href="https://grokipedia.com" target="_blank">Grokipedia</a> • 
+      <a href="#" id="deepLink" target="_blank">Read full article →</a></small>
+    </p>
+  </div>
+</div>
 
 <script>
-    document.getElementById('testBtn').onclick = function() {
-        document.getElementById('result').textContent = 'Button works!';
-        alert('Success!');
-    };
+const terms = {
+  algorithm: {
+    title: "Algorithm",
+    body: `<p>Think of it like cooking pasta:</p><ol><li>Boil water</li><li>Add pasta</li><li>Wait 10 min</li><li>Eat</li></ol>
+           <p>Computers do exactly the same thing — just with data instead of spaghetti.</p>`,
+    link: "https://grokipedia.com/Algorithm"
+  },
+  hardware: {
+    title: "Hardware",
+    body: `<p>The physical stuff you can drop on your foot.</p>
+           <ul><li>CPU = brain</li><li>RAM = short-term memory</li><li>SSD = long-term memory</li></ul>`,
+    link: "https://grokipedia.com/Computer_hardware"
+  },
+  "turing-complete": {
+    title: "Turing-Complete",
+    body: `<p>A system that can simulate ANY other computer.</p>
+           <p>Minecraft redstone, PowerPoint macros, and even Magic: The Gathering are all Turing-complete!</p>`,
+    link: "https://grokipedia.com/Turing_completeness"
+  },
+  "real-coder": {   // ← your photo lives here
+    title: "Real-World Coder",
+    body: `<img src="https://files.grok.x.ai/2025-11-23/real-coder-photo.jpg" 
+                alt="A real programmer taking a well-deserved break on a construction site, wearing hi-vis and a cap" 
+                class="itab-photo">
+           <p><strong>This is what an actual programmer looks like between commits.</strong></p>
+           <p>No hoodie, no Red Bull, just hi-vis shirt, dust, and probably thinking about the next bug fix while staring into the distance.</p>
+           <p>Respect the craft</p>`,
+    link: "https://grokipedia.com/Software_engineer"
+  }
+};
+
+// click or keyboard activation
+document.querySelectorAll('.itab').forEach(el => {
+  const term = el.dataset.term;
+  el.addEventListener('click', () => openPopup(terms[term]));
+  el.addEventListener('keydown', e => (e.key==='Enter' || e.key===' ') && openPopup(terms[term]));
+});
+
+function openPopup(data) {
+  document.getElementById('popupTitle').textContent = data.title;
+  document.getElementById('popupBody').innerHTML = data.body;
+  document.getElementById('deepLink').href = data.link;
+  document.getElementById('itabOverlay').style.display = 'flex';
+  document.querySelector('.popup-content').focus();
+}
+
+function closePopup() {
+  document.getElementById('itabOverlay').style.display = 'none';
+}
+
+// close on backdrop or Escape
+document.getElementById('itabOverlay').addEventListener('click', e => e.target===document.getElementById('itabOverlay') && closePopup());
+document.addEventListener('keydown', e => e.key==='Escape' && closePopup());
 </script>
-```
 
 </body>
 </html>
