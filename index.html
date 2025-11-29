@@ -375,7 +375,7 @@
 ```
     <!-- API Keys Section -->
     <div class="form-section">
-        <div class="section-header active" onclick="toggleSection(0)">
+        <div class="section-header active" onclick="toggleSection(0, event)">
             <div class="section-title">🔑 Setup - API Keys</div>
             <div class="section-arrow open">▼</div>
         </div>
@@ -397,7 +397,7 @@
     
     <!-- Images Section -->
     <div class="form-section">
-        <div class="section-header active" onclick="toggleSection(1)">
+        <div class="section-header active" onclick="toggleSection(1, event)">
             <div class="section-title">📸 Product Images</div>
             <div class="section-arrow open">▼</div>
         </div>
@@ -471,7 +471,7 @@
     
     <!-- Product Info Section -->
     <div class="form-section">
-        <div class="section-header active" onclick="toggleSection(2)">
+        <div class="section-header active" onclick="toggleSection(2, event)">
             <div class="section-title">🏷️ Product Information</div>
             <div class="section-arrow open">▼</div>
         </div>
@@ -491,9 +491,9 @@
             
             <label>Overlay Text Color</label>
             <div style="display: flex; gap: 10px; margin-bottom: 20px;">
-                <button type="button" onclick="setTextColor('#FFFFFF')" style="flex: 1; padding: 12px; background: white; color: black; border: 2px solid #e2e8f0; border-radius: 8px; cursor: pointer; font-weight: 600;">⚪ White</button>
-                <button type="button" onclick="setTextColor('#000000')" style="flex: 1; padding: 12px; background: black; color: white; border: 2px solid #e2e8f0; border-radius: 8px; cursor: pointer; font-weight: 600;">⚫ Black</button>
-                <button type="button" onclick="setTextColor('#FFD700')" style="flex: 1; padding: 12px; background: #FFD700; color: black; border: 2px solid #e2e8f0; border-radius: 8px; cursor: pointer; font-weight: 600;">🟡 Yellow</button>
+                <button type="button" onclick="event.preventDefault(); setTextColor('#FFFFFF')" style="flex: 1; padding: 12px; background: white; color: black; border: 2px solid #e2e8f0; border-radius: 8px; cursor: pointer; font-weight: 600;">⚪ White</button>
+                <button type="button" onclick="event.preventDefault(); setTextColor('#000000')" style="flex: 1; padding: 12px; background: black; color: white; border: 2px solid #e2e8f0; border-radius: 8px; cursor: pointer; font-weight: 600;">⚫ Black</button>
+                <button type="button" onclick="event.preventDefault(); setTextColor('#FFD700')" style="flex: 1; padding: 12px; background: #FFD700; color: black; border: 2px solid #e2e8f0; border-radius: 8px; cursor: pointer; font-weight: 600;">🟡 Yellow</button>
             </div>
             <input type="color" id="overlayColor" value="#FFFFFF" style="width: 100%; height: 50px; border: 2px solid #e2e8f0; border-radius: 8px; cursor: pointer; margin-bottom: 20px;">
             <p class="helper-text" style="margin-top: -15px;">Or choose any custom color above</p>
@@ -508,14 +508,14 @@
     
     <!-- Popup Content Section -->
     <div class="form-section">
-        <div class="section-header" onclick="toggleSection(3)">
+        <div class="section-header" onclick="toggleSection(3, event)">
             <div class="section-title">💬 Popup Information</div>
             <div class="section-arrow">▼</div>
         </div>
         <div class="section-content">
             <div style="background: #e6f0ff; border: 2px solid #667eea; border-radius: 12px; padding: 20px; margin-bottom: 25px; text-align: center;">
                 <p style="color: #2d3748; margin-bottom: 15px; font-weight: 600;">✨ Let AI write this for you!</p>
-                <button type="button" onclick="generateWithAI()" style="padding: 15px 30px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; font-size: 1.1em; font-weight: bold; cursor: pointer;">🤖 Generate Content with Gemini AI</button>
+                <button type="button" onclick="event.preventDefault(); generateWithAI()" style="padding: 15px 30px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; font-size: 1.1em; font-weight: bold; cursor: pointer;">🤖 Generate Content with Gemini AI</button>
                 <p style="color: #718096; margin-top: 10px; font-size: 0.9em;">Automatically fills in all sections below based on your product name</p>
             </div>
             
@@ -561,7 +561,12 @@
     const imageCount = document.getElementById('imageCount');
     
     // Toggle section open/close
-    function toggleSection(index) {
+    function toggleSection(index, event) {
+        if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        
         const sections = document.querySelectorAll('.section-content');
         const headers = document.querySelectorAll('.section-header');
         const arrows = document.querySelectorAll('.section-arrow');
