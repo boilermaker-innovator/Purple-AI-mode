@@ -42,35 +42,17 @@
     }
     
     .form-section {
-        margin-bottom: 15px;
+        margin-bottom: 40px;
+        padding: 30px;
         border: 2px solid #e2e8f0;
         border-radius: 12px;
-        overflow: hidden;
-        background: white;
-    }
-    
-    .section-header {
-        color: #2d3748;
-        padding: 20px 25px;
-        font-size: 1.3em;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        cursor: pointer;
         background: #f7fafc;
-        transition: background 0.3s;
-        user-select: none;
-    }
-    
-    .section-header:hover {
-        background: #edf2f7;
-    }
-    
-    .section-header.active {
-        background: #e6f0ff;
     }
     
     .section-title {
+        color: #2d3748;
+        margin-bottom: 20px;
+        font-size: 1.4em;
         display: flex;
         align-items: center;
         font-weight: 600;
@@ -83,29 +65,6 @@
         background: #667eea;
         margin-right: 12px;
         border-radius: 3px;
-    }
-    
-    .section-arrow {
-        font-size: 1.5em;
-        transition: transform 0.3s;
-        color: #667eea;
-    }
-    
-    .section-arrow.open {
-        transform: rotate(180deg);
-    }
-    
-    .section-content {
-        max-height: 0;
-        overflow: hidden;
-        transition: max-height 0.3s ease-out;
-        padding: 0 25px;
-    }
-    
-    .section-content.open {
-        max-height: 2000px;
-        padding: 25px;
-        transition: max-height 0.5s ease-in;
     }
     
     label {
@@ -375,34 +334,27 @@
 ```
     <!-- API Keys Section -->
     <div class="form-section">
-        <div class="section-header active" onclick="toggleSection(0, event)">
-            <div class="section-title">🔑 Setup - API Keys</div>
-            <div class="section-arrow open">▼</div>
-        </div>
-        <div class="section-content open">
-            <h3 style="color: #667eea; margin-bottom: 15px; font-size: 1.2em;">🤖 Gemini AI Key (Most Important!)</h3>
-            <p class="helper-text">This auto-generates all your product descriptions. <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color: #667eea; font-weight: bold;">Get your free Gemini key here →</a></p>
-            
-            <label>Your Google Gemini API Key</label>
-            <input type="text" id="geminiApiKey" placeholder="Paste your Gemini API key here" style="font-family: monospace; margin-bottom: 30px;" value="AIzaSyBco1KBJyt0wOYO3Hli9vE3INDQ10cjRAA">
-            
-            <h3 style="color: #667eea; margin-bottom: 15px; margin-top: 25px; font-size: 1.2em;">📸 ImgBB Key (For Image Uploads)</h3>
-            <p class="helper-text">This uploads your images to the web. <a href="https://api.imgbb.com/" target="_blank" style="color: #667eea; font-weight: bold;">Get your free ImgBB key here →</a></p>
-            
-            <label>Your ImgBB API Key</label>
-            <input type="text" id="apiKey" placeholder="Paste your ImgBB API key here" style="font-family: monospace;" value="59cd5b2935b5b01bc744b5b0a1d26ee0">
-            <p class="helper-text" style="margin-top: -15px;">Both keys are completely free and take 2 minutes each to get!</p>
-        </div>
+        <div class="section-title">🔑 Setup - API Keys</div>
+        
+        <h3 style="color: #667eea; margin-bottom: 15px; font-size: 1.2em;">🤖 Gemini AI Key (Most Important!)</h3>
+        <p class="helper-text">This auto-generates all your product descriptions. <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color: #667eea; font-weight: bold;">Get your free Gemini key here →</a></p>
+        
+        <label>Your Google Gemini API Key</label>
+        <input type="text" id="geminiApiKey" placeholder="Paste your Gemini API key here" style="font-family: monospace; margin-bottom: 30px;" value="AIzaSyBco1KBJyt0wOYO3Hli9vE3INDQ10cjRAA">
+        
+        <h3 style="color: #667eea; margin-bottom: 15px; margin-top: 25px; font-size: 1.2em;">📸 ImgBB Key (For Image Uploads)</h3>
+        <p class="helper-text">This uploads your images to the web. <a href="https://api.imgbb.com/" target="_blank" style="color: #667eea; font-weight: bold;">Get your free ImgBB key here →</a></p>
+        
+        <label>Your ImgBB API Key</label>
+        <input type="text" id="apiKey" placeholder="Paste your ImgBB API key here" style="font-family: monospace;" value="59cd5b2935b5b01bc744b5b0a1d26ee0">
+        <p class="helper-text" style="margin-top: -15px;">Both keys are completely free and take 2 minutes each to get!</p>
     </div>
     
     <!-- Images Section -->
     <div class="form-section">
-        <div class="section-header active" onclick="toggleSection(1, event)">
-            <div class="section-title">📸 Product Images</div>
-            <div class="section-arrow open">▼</div>
-        </div>
-        <div class="section-content open">
-            <p class="helper-text">Choose your preferred method: upload from device OR paste image URLs</p>
+        <div class="section-title">📸 Product Images</div>
+        
+        <p class="helper-text">Choose your preferred method: upload from device OR paste image URLs</p>
             
             <h3 style="color: #667eea; margin-bottom: 15px; font-size: 1.1em;">Option 1: Upload from Device</h3>
             
@@ -466,16 +418,11 @@
                     <p style="color: #48bb78; font-size: 0.9em; margin-top: 5px;">✓ Image loaded</p>
                 </div>
             </div>
-        </div>
     </div>
     
     <!-- Product Info Section -->
     <div class="form-section">
-        <div class="section-header active" onclick="toggleSection(2, event)">
-            <div class="section-title">🏷️ Product Information</div>
-            <div class="section-arrow open">▼</div>
-        </div>
-        <div class="section-content open">
+        <div class="section-title">🏷️ Product Information</div>
             <label>Product Name</label>
             <input type="text" id="productName" placeholder="e.g., Premium Brake Pads" required value="Premium Product Demo">
             
@@ -503,16 +450,11 @@
                 <input type="number" id="overlaySize" value="18" min="12" max="48">
                 <span class="size-preview">px (12-48)</span>
             </div>
-        </div>
     </div>
     
     <!-- Popup Content Section -->
     <div class="form-section">
-        <div class="section-header" onclick="toggleSection(3, event)">
-            <div class="section-title">💬 Popup Information</div>
-            <div class="section-arrow">▼</div>
-        </div>
-        <div class="section-content">
+        <div class="section-title">💬 Popup Information</div>
             <div style="background: #e6f0ff; border: 2px solid #667eea; border-radius: 12px; padding: 20px; margin-bottom: 25px; text-align: center;">
                 <p style="color: #2d3748; margin-bottom: 15px; font-weight: 600;">✨ Let AI write this for you!</p>
                 <button type="button" onclick="event.preventDefault(); generateWithAI()" style="padding: 15px 30px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; font-size: 1.1em; font-weight: bold; cursor: pointer;">🤖 Generate Content with Gemini AI</button>
@@ -530,7 +472,6 @@
             
             <label>What makes it different?</label>
             <textarea id="whatDifferent" placeholder="What makes this product unique or special... (or click AI button above)"></textarea>
-        </div>
     </div>
     
     <!-- Generate Button -->
@@ -559,30 +500,6 @@
     const imageInput = document.getElementById('imageInput');
     const imagePreviews = document.getElementById('imagePreviews');
     const imageCount = document.getElementById('imageCount');
-    
-    // Toggle section open/close
-    function toggleSection(index, event) {
-        if (event) {
-            event.preventDefault();
-            event.stopPropagation();
-        }
-        
-        const sections = document.querySelectorAll('.section-content');
-        const headers = document.querySelectorAll('.section-header');
-        const arrows = document.querySelectorAll('.section-arrow');
-        
-        const isOpen = sections[index].classList.contains('open');
-        
-        if (isOpen) {
-            sections[index].classList.remove('open');
-            headers[index].classList.remove('active');
-            arrows[index].classList.remove('open');
-        } else {
-            sections[index].classList.add('open');
-            headers[index].classList.add('active');
-            arrows[index].classList.add('open');
-        }
-    }
     
     // Set text color from quick buttons
     function setTextColor(color) {
@@ -621,13 +538,11 @@
         
         if (!geminiKey) {
             alert('Please enter your Gemini API key in the Setup section first!\n\nGet a free key at: https://aistudio.google.com/app/apikey');
-            toggleSection(0); // Open setup section
             return;
         }
         
         if (!productName) {
             alert('Please enter a product name first!');
-            toggleSection(2); // Open product info section
             return;
         }
         
@@ -896,7 +811,6 @@ Keep each section concise, customer-focused, and easy to understand. Write in a 
             const apiKey = document.getElementById('apiKey').value.trim();
             if (!apiKey) {
                 alert('Please enter your ImgBB API key in the Setup section first!\n\nGet a free key at: https://api.imgbb.com/\n\nOR use the URL option instead (no API key needed).');
-                toggleSection(0);
                 return;
             }
             
