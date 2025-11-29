@@ -457,7 +457,7 @@
         <div class="section-title">💬 Popup Information</div>
             <div style="background: #e6f0ff; border: 2px solid #667eea; border-radius: 12px; padding: 20px; margin-bottom: 25px; text-align: center;">
                 <p style="color: #2d3748; margin-bottom: 15px; font-weight: 600;">✨ Let AI write this for you!</p>
-                <button type="button" onclick="event.preventDefault(); generateWithAI()" style="padding: 15px 30px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; font-size: 1.1em; font-weight: bold; cursor: pointer;">🤖 Generate Content with Gemini AI</button>
+                <button type="button" onclick="generateWithAI(event)" style="padding: 15px 30px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; font-size: 1.1em; font-weight: bold; cursor: pointer;">🤖 Generate Content with Gemini AI</button>
                 <p style="color: #718096; margin-top: 10px; font-size: 0.9em;">Automatically fills in all sections below based on your product name</p>
             </div>
             
@@ -532,7 +532,7 @@
     }
     
     // Generate content with Gemini AI
-    async function generateWithAI() {
+    async function generateWithAI(event) {
         const geminiKey = document.getElementById('geminiApiKey').value.trim();
         const productName = document.getElementById('productName').value.trim();
         
@@ -547,7 +547,7 @@
         }
         
         // Show loading state
-        const btn = event.target;
+        const btn = event ? event.target : document.querySelector('button[onclick*="generateWithAI"]');
         const originalText = btn.textContent;
         btn.textContent = '⏳ Generating with AI...';
         btn.disabled = true;
