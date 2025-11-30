@@ -1,502 +1,765 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>iTabs Generator – Interactive Product Display</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>
-    * { margin:0; padding:0; box-sizing:border-box; }
-    body {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        padding: 20px;
-        min-height: 100vh;
-    }
-    .container {
-        max-width: 900px;
-        margin: 0 auto;
-        background: #fff;
-        border-radius: 20px;
-        padding: 40px;
-        box-shadow: 0 20px 60px rgba(0,0,0,.3);
-    }
-    h1 { color:#667eea; margin-bottom:10px; font-size:2.5em; }
-    .subtitle { color:#718096; margin-bottom:40px; font-size:1.1em; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iTabs Generator - Create Your Interactive Product Display</title>
+    <style>
+        /* Global Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    .form-section {
-        margin-bottom:40px;
-        padding:30px;
-        border:2px solid #e2e8f0;
-        border-radius:12px;
-        background:#f7fafc;
-    }
-    .section-title {
-        color:#2d3748;
-        margin-bottom:20px;
-        font-size:1.4em;
-        font-weight:600;
-        display:flex;
-        align-items:center;
-    }
-    .section-title::before {
-        content:''; width:6px; height:24px; background:#667eea;
-        margin-right:12px; border-radius:3px;
-    }
+        /* Body & Layout */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        
+        .subtitle {
+            color: #718096;
+            margin-bottom: 40px;
+            font-size: 1.1em;
+        }
+        
+        /* Form Sections */
+        .form-section {
+            margin-bottom: 40px;
+            padding: 30px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            background: #f7fafc;
+        }
+        
+        .section-title {
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+        }
+        
+        .section-title::before {
+            content: '';
+            width: 6px;
+            height: 24px;
+            background: #667eea;
+            margin-right: 12px;
+            border-radius: 3px;
+        }
+        
+        /* Form Elements */
+        label {
+            display: block;
+            color: #4a5568;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+        
+        input[type="text"],
+        input[type="url"],
+        input[type="number"],
+        textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1em;
+            margin-bottom: 20px;
+            transition: border-color 0.3s;
+            font-family: inherit;
+        }
+        
+        input:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .helper-text {
+            color: #718096;
+            font-size: 0.85em;
+            margin-top: -15px;
+            margin-bottom: 20px;
+        }
+        
+        /* Image Preview Styles */
+        .image-previews {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .preview-item {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            aspect-ratio: 1;
+            background: #f7fafc;
+        }
+        
+        .preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
 
-    label { display:block; color:#4a5568; margin-bottom:8px; font-weight:600; font-size:.95em; }
-    input[type=text], input[type=url], input[type=number], textarea, input[type=color] {
-        width:100%; padding:12px 15px; border:2px solid #e2e8f0;
-        border-radius:8px; font-size:1em; margin-bottom:20px; transition:border-color .3s;
-    }
-    input:focus, textarea:focus { outline:none; border-color:#667eea; }
-    textarea { min-height:120px; resize:vertical; }
-
-    .upload-area {
-        border:3px dashed #cbd5e0; border-radius:12px; padding:40px;
-        text-align:center; background:#f7fafc; cursor:pointer;
-        transition:all .3s; margin-bottom:20px;
-    }
-    .upload-area:hover { border-color:#667eea; background:#edf2f7; }
-    .upload-area.dragging { border-color:#667eea; background:#e6f0ff; }
-
-    .image-previews { display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:15px; margin-top:20px; }
-    .preview-item { position:relative; border-radius:8px; overflow:hidden; aspect-ratio:1; background:#f7fafc; }
-    .preview-item img { width:100%; height:100%; object-fit:cover; }
-    .remove-image {
-        position:absolute; top:5px; right:5px; background:rgba(239,68,68,.9);
-        color:#fff; border:none; border-radius:50%; width:30px; height:30px;
-        font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center;
-    }
-
-    .generate-btn {
-        width:100%; padding:18px; background:linear-gradient(135deg,#667eea,#764ba2);
-        color:#fff; border:none; border-radius:12px; font-size:1.2em; font-weight:bold;
-        cursor:pointer; transition:transform .2s,box-shadow .2s; margin-top:20px;
-    }
-    .generate-btn:hover { transform:translateY(-2px); box-shadow:0 8px 25px rgba(102,126,234,.4); }
-    .generate-btn:disabled { opacity:.5; cursor:not-allowed; }
-
-    .output-section { display:none; margin-top:40px; padding-top:40px; border-top:3px solid #667eea; }
-    .output-section.show { display:block; }
-    .code-output {
-        background:#1a202c; color:#48bb78; padding:20px; border-radius:8px;
-        font-family:'Courier New',monospace; font-size:.85em; max-height:400px;
-        overflow:auto; white-space:pre-wrap; word-wrap:break-word;
-    }
-    .copy-btn { padding:12px 30px; background:#48bb78; color:#fff; border:none; border-radius:8px; cursor:pointer; }
-    .copy-btn:hover { background:#38a169; }
-    .copy-btn.copied { background:#2f855a; }
-
-    .loading { display:none; text-align:center; padding:20px; color:#667eea; font-weight:600; }
-    .loading.show { display:block; }
-    .spinner {
-        border:4px solid #f3f4f6; border-top:4px solid #667eea;
-        border-radius:50%; width:40px; height:40px; animation:spin 1s linear infinite;
-        margin:0 auto 15px;
-    }
-    @keyframes spin { to { transform:rotate(360deg); } }
-</style>
+        .url-preview-wrapper {
+            margin-top: 10px; 
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 10px;
+            border: 1px dashed #e2e8f0;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        /* Size Control */
+        .size-control {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .size-control input[type="number"] {
+            max-width: 100px;
+            margin-bottom: 0;
+        }
+        
+        .size-preview {
+            color: #718096;
+            font-size: 0.9em;
+        }
+        
+        /* Generate Button */
+        .generate-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 20px;
+        }
+        
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .generate-btn:active {
+            transform: translateY(0);
+        }
+        
+        .generate-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        /* Output Section */
+        .output-section {
+            display: none;
+            margin-top: 40px;
+            padding-top: 40px;
+            border-top: 3px solid #667eea;
+        }
+        
+        .output-section.show {
+            display: block;
+        }
+        
+        .code-output {
+            background: #1a202c;
+            color: #48bb78;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 15px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        
+        .copy-btn {
+            padding: 12px 30px;
+            background: #48bb78;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .copy-btn:hover {
+            background: #38a169;
+        }
+        
+        .copy-btn.copied {
+            background: #2f855a;
+        }
+        
+        .preview-note {
+            background: #fef5e7;
+            border-left: 4px solid #f39c12;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            color: #4a5568;
+        }
+        
+        /* Removed loading styles as external APIs are no longer used */
+    </style>
 </head>
 <body>
-<div class="container">
-    <h1>iTabs Generator</h1>
-    <p class="subtitle">Create beautiful interactive product displays in minutes</p>
+    <div class="container">
+        <h1>🎯 iTabs Generator</h1>
+        <p class="subtitle">Create beautiful interactive product displays using only URLs.</p>
 
-    <!-- API Keys -->
-    <div class="form-section">
-        <div class="section-title">API Keys</div>
+        <div class="form-section">
+            <div class="section-title">📸 Product Images (URLs Only)</div>
+            
+            <p class="helper-text">You need at least one image URL, up to five. Make sure these links are publicly accessible (e.g., from your website or a hosting service).</p>
 
-        <label>Gemini AI Key (required for auto-content)</label>
-        <input type="text" id="geminiApiKey" placeholder="Paste your Gemini API key">
-        <p style="font-size:.85em; margin-top:-15px;">
-            <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color:#667eea;">Get free key →</a>
-        </p>
-
-        <label>ImgBB API Key (required when uploading files)</label>
-        <input type="text" id="imgbbKey" placeholder="Paste your ImgBB API key">
-        <p style="font-size:.85em; margin-top:-15px;">
-            <a href="https://api.imgbb.com/" target="_blank" style="color:#667eea;">Get free key →</a>
-        </p>
-    </div>
-
-    <!-- Images -->
-    <div class="form-section">
-        <div class="section-title">Product Images (max 5)</div>
-
-        <div class="upload-area" id="uploadArea">
-            <div style="font-size:48px;">Camera</div>
-            <div>Click or drag & drop images here</div>
-        </div>
-        <input type="file" id="imageInput" accept="image/*" multiple style="display:none;">
-
-        <div class="image-previews" id="imagePreviews"></div>
-        <div id="imageCount" style="text-align:center; margin-top:10px; color:#667eea; font-weight:600;"></div>
-
-        <div style="text-align:center; margin:25px 0; color:#718096; font-weight:600;">— OR —</div>
-
-        <div id="urlInputs">
-            <!--[1-5] URL fields will be injected by JS-->
-        </div>
-    </div>
-
-    <!-- Product Info -->
-    <div class="form-section">
-        <div class="section-title">Product Information</div>
-        <label>Product Name</label>
-        <input type="text" id="productName" placeholder="e.g. Premium Brake Pads" value="Premium Product Demo">
-
-        <label>Button URL (optional)</label>
-        <input type="url" id="buttonUrl" placeholder="https://yourshop.com/product">
-
-        <label>Button Text (optional)</label>
-        <input type="text" id="buttonText" placeholder="Will auto-fill from URL">
-
-        <label>Overlay Text (on first image)</label>
-        <input type="text" id="overlayText" value="Click the i for more info">
-
-        <label>Overlay Text Color & Size</label>
-        <div style="display:flex; gap:10px; align-items:center;">
-            <input type="color" id="overlayColor" value="#FFFFFF">
-            <input type="number" id="overlaySize" value="18" min="12" max="48" style="width:80px;">
-            <span>px</span>
-        </div>
-    </div>
-
-    <!-- Popup Content -->
-    <div class="form-section">
-        <div class="section-title">Popup Content</div>
-        <div style="background:#e6f0ff; padding:20px; border-radius:12px; text-align:center; margin-bottom:25px;">
-            <button id="aiBtn" style="padding:15px 30px; background:linear-gradient(135deg,#667eea,#764ba2); color:#fff; border:none; border-radius:8px; cursor:pointer; font-weight:bold;">
-                Generate with Gemini AI
-            </button>
-        </div>
-
-        <label>What is it?</label>
-        <textarea id="whatIsIt"></textarea>
-
-        <label>Why do I need it?</label>
-        <textarea id="whyNeedIt"></textarea>
-
-        <label>How does it work?</label>
-        <textarea id="howWorks"></textarea>
-
-        <label>What makes it different?</label>
-        <textarea id="whatDifferent"></textarea>
-    </div>
-
-    <button class="generate-btn" id="generateBtn">Generate iTabs Code</button>
-
-    <div class="loading" id="loading">
-        <div class="spinner"></div>
-        <div>Uploading images…</div>
-    </div>
-
-    <div class="output-section" id="outputSection">
-        <h2>Your iTabs Code</h2>
-        <div style="background:#fef5e7; padding:15px; border-left:4px solid #f39c12; border-radius:4px; margin-bottom:15px;">
-            Paste the code into WordPress (HTML block) or Shopify product description.
-        </div>
-        <pre class="code-output" id="codeOutput"></pre>
-        <button class="copy-btn" id="copyBtn">Copy Code</button>
-    </div>
-</div>
-
-<script>
-/* ----------------------- Global vars ----------------------- */
-let uploadedFiles = [];
-
-/* ----------------------- Helper functions ----------------------- */
-const $ = id => document.getElementById(id);
-function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-}
-
-/* ----------------------- URL inputs creation ----------------------- */
-function createUrlInputs() {
-    const container = $('urlInputs');
-    container.innerHTML = '';
-    for (let i = 1; i <= 5; i++) {
-        const div = document.createElement('div');
-        div.style.marginBottom = '15px';
-        div.innerHTML = `
-            <label>Image ${i} URL ${i===1?'':'(optional)'}</label>
-            <input type="url" class="urlInput" data-index="${i}" placeholder="https://example.com/image.jpg">
-            <div id="urlPrev${i}" style="margin-top:8px; display:none;">
-                <img style="max-height:120px; border-radius:8px;" id="urlImg${i}">
+            <div style="margin-bottom: 20px;">
+                <label>Image 1 URL (Required)</label>
+                <input type="url" id="imageUrl1" placeholder="https://example.com/image1.jpg" oninput="previewUrl(1)" required value="https://i.ibb.co/KcS2bWJt/IMG-4337.jpg">
+                <div id="urlPreview1" class="url-preview-wrapper" style="display: none;">
+                    <img id="urlPreviewImg1" style="max-width: 100px; max-height: 100px; border-radius: 8px; border: 2px solid #e2e8f0;">
+                    <p style="color: #48bb78; font-size: 0.9em;">✓ Image loaded</p>
+                </div>
             </div>
-        `;
-        container.appendChild(div);
+            
+            <div style="margin-bottom: 20px;">
+                <label>Image 2 URL (Optional)</label>
+                <input type="url" id="imageUrl2" placeholder="https://example.com/image2.jpg" oninput="previewUrl(2)" value="https://i.ibb.co/qYk5ZJ1G/IMG-4338.jpg">
+                <div id="urlPreview2" class="url-preview-wrapper" style="display: none;">
+                    <img id="urlPreviewImg2" style="max-width: 100px; max-height: 100px; border-radius: 8px; border: 2px solid #e2e8f0;">
+                    <p style="color: #48bb78; font-size: 0.9em;">✓ Image loaded</p>
+                </div>
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <label>Image 3 URL (Optional)</label>
+                <input type="url" id="imageUrl3" placeholder="https://example.com/image3.jpg" oninput="previewUrl(3)" value="https://i.ibb.co/vCSy5bjR/IMG-4309.jpg">
+                <div id="urlPreview3" class="url-preview-wrapper" style="display: none;">
+                    <img id="urlPreviewImg3" style="max-width: 100px; max-height: 100px; border-radius: 8px; border: 2px solid #e2e8f0;">
+                    <p style="color: #48bb78; font-size: 0.9em;">✓ Image loaded</p>
+                </div>
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <label>Image 4 URL (Optional)</label>
+                <input type="url" id="imageUrl4" placeholder="https://example.com/image4.jpg" oninput="previewUrl(4)" value="https://i.ibb.co/PGq9hvbV/IMG-2279.jpg">
+                <div id="urlPreview4" class="url-preview-wrapper" style="display: none;">
+                    <img id="urlPreviewImg4" style="max-width: 100px; max-height: 100px; border-radius: 8px; border: 2px solid #e2e8f0;">
+                    <p style="color: #48bb78; font-size: 0.9em;">✓ Image loaded</p>
+                </div>
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <label>Image 5 URL (Optional)</label>
+                <input type="url" id="imageUrl5" placeholder="https://example.com/image5.jpg" oninput="previewUrl(5)" value="https://i.ibb.co/kstLyjwX/IMG-3707.jpg">
+                <div id="urlPreview5" class="url-preview-wrapper" style="display: none;">
+                    <img id="urlPreviewImg5" style="max-width: 100px; max-height: 100px; border-radius: 8px; border: 2px solid #e2e8f0;">
+                    <p style="color: #48bb78; font-size: 0.9em;">✓ Image loaded</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-section">
+            <div class="section-title">🏷️ Product Information</div>
+            <label>Product Name</label>
+            <input type="text" id="productName" placeholder="e.g., Premium Brake Pads" required value="Product Tabs Demo">
+            
+            <label>Product Website URL (optional)</label>
+            <input type="url" id="buttonUrl" placeholder="https://yourwebsite.com/product" oninput="autoFillButtonText()" value="https://www.google.com/search?q=product">
+            <p class="helper-text" style="margin-top: -15px;">Button will link to this URL if provided.</p>
+            
+            <label>Button Text (optional - auto-fills from URL)</label>
+            <input type="text" id="buttonText" placeholder="Will auto-fill from URL above">
+            
+            <label>Overlay Text (appears on first image)</label>
+            <input type="text" id="overlayText" placeholder="e.g., Click the i for more info" value="Click the 'i' for detailed specs">
+            
+            <label>Overlay Text Color</label>
+            <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                <button type="button" onclick="event.preventDefault(); setTextColor('#FFFFFF')" style="flex: 1; padding: 12px; background: white; color: black; border: 2px solid #e2e8f0; border-radius: 8px; cursor: pointer; font-weight: 600;">⚪ White</button>
+                <button type="button" onclick="event.preventDefault(); setTextColor('#000000')" style="flex: 1; padding: 12px; background: black; color: white; border: 2px solid #e2e8f0; border-radius: 8px; cursor: pointer; font-weight: 600;">⚫ Black</button>
+                <button type="button" onclick="event.preventDefault(); setTextColor('#FFD700')" style="flex: 1; padding: 12px; background: #FFD700; color: black; border: 2px solid #e2e8f0; border-radius: 8px; cursor: pointer; font-weight: 600;">🟡 Yellow</button>
+            </div>
+            <input type="color" id="overlayColor" value="#FFFFFF" style="width: 100%; height: 50px; border: 2px solid #e2e8f0; border-radius: 8px; cursor: pointer; margin-bottom: 20px;">
+            <p class="helper-text" style="margin-top: -15px;">Or choose any custom color above</p>
+            
+            <label>Overlay Text Size</label>
+            <div class="size-control">
+                <input type="number" id="overlaySize" value="18" min="12" max="48">
+                <span class="size-preview">px (12-48)</span>
+            </div>
+        </div>
+        
+        <div class="form-section">
+            <div class="section-title">💬 Popup Information</div>
+            
+            <div style="background: #f7fafc; border: 2px dashed #718096; border-radius: 12px; padding: 20px; margin-bottom: 25px; text-align: center;">
+                <p style="color: #2d3748; font-weight: 600;">⚠️ API-Free Version: Please enter your information below. The previous AI generation feature has been removed for security.</p>
+            </div>
+            
+            <label>What is it? (Tab 1)</label>
+            <textarea id="whatIsIt" placeholder="Describe what this product is...">This is a sample interactive product display element designed to show complex product details without cluttering your main page. It uses modern CSS for styling and JavaScript for dynamic popups and image sliding.</textarea>
+            
+            <label>Why do I need it? (Tab 2)</label>
+            <textarea id="whyNeedIt" placeholder="Explain the benefits and why customers need it...">You need this to boost engagement! By offering detailed, segmented information in a clean tabbed modal, you keep users on your page longer and answer key questions efficiently, leading to higher conversion rates.</textarea>
+            
+            <label>How does it work? (Tab 3)</label>
+            <textarea id="howWorks" placeholder="Explain how to use it or how it functions...">The code uses pure HTML, CSS, and vanilla JavaScript. Simply paste the generated code into your webpage's editor (Shopify, WordPress, etc.). Clicking the 'i' icon opens the modal, and the tabs switch the text content instantly.</textarea>
+            
+            <label>What makes it different? (Tab 4)</label>
+            <textarea id="whatDifferent" placeholder="What makes this product unique or special...">Unlike other heavy plugins, this is lightweight, fast, and uses no external libraries or frameworks. It works perfectly on desktop and mobile, ensuring a seamless experience for all your customers.</textarea>
+        </div>
+        
+        <button class="generate-btn" id="generateBtn" onclick="generateCode()">✨ Generate iTabs Code</button>
+        
+        <div class="output-section" id="outputSection">
+            <h2>📋 Your iTabs Code</h2>
+            <div class="preview-note">
+                <strong>How to use:</strong> Copy the code below and paste it into your WordPress page editor (HTML mode) or Shopify product description.
+            </div>
+            <div class="code-output" id="codeOutput"></div>
+            <button class="copy-btn" onclick="copyCode()">📋 Copy Code</button>
+        </div>
+    </div>
+
+<script>
+    // Set text color from quick buttons
+    function setTextColor(color) {
+        document.getElementById('overlayColor').value = color;
     }
-}
-createUrlInputs();
+    
+    // Auto-fill button text from URL
+    function autoFillButtonText() {
+        const url = document.getElementById('buttonUrl').value.trim();
+        const buttonTextField = document.getElementById('buttonText');
+        
+        // Only auto-fill if button text field is empty 
+        if (!buttonTextField.value) {
+            if (url) {
+                try {
+                    const urlObj = new URL(url);
+                    let domain = urlObj.hostname.replace('www.', '');
+                    buttonTextField.placeholder = 'Visit ' + domain;
+                } catch (e) {
+                    buttonTextField.placeholder = 'Will auto-fill from URL above';
+                }
+            } else {
+                buttonTextField.placeholder = 'Will auto-fill from URL above';
+            }
+        }
+    }
 
-/* ----------------------- Drag & Drop ----------------------- */
-const uploadArea = $('uploadArea');
-const imageInput = $('imageInput');
-
-['dragenter','dragover'].forEach(e=>uploadArea.addEventListener(e,()=>uploadArea.classList.add('dragging')));
-['dragleave','drop'].forEach(e=>uploadArea.addEventListener(e,()=>uploadArea.classList.remove('dragging')));
-uploadArea.addEventListener('click', ()=>imageInput.click());
-
-uploadArea.addEventListener('drop', e=>{
-    e.preventDefault();
-    handleFiles(e.dataTransfer.files);
-});
-imageInput.addEventListener('change', e=>handleFiles(e.target.files));
-
-function handleFiles(files) {
-    uploadedFiles = Array.from(files).slice(0,5);
-    renderPreviews();
-}
-function renderPreviews() {
-    const previews = $('imagePreviews');
-    previews.innerHTML = '';
-    uploadedFiles.forEach((file,i)=>{
-        const reader = new FileReader();
-        reader.onload = e=>{
-            const div = document.createElement('div');
-            div.className = 'preview-item';
-            div.innerHTML = `
-                <img src="${e.target.result}">
-                <button class="remove-image" onclick="removeUploaded(${i})">×</button>
-            `;
-            previews.appendChild(div);
+    // Escape HTML characters for safety in generated output
+    function escapeHtml(text) {
+        if (!text) return '';
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+    
+    // Preview URL images
+    function previewUrl(index) {
+        const urlInput = document.getElementById('imageUrl' + index);
+        const previewWrapper = document.getElementById('urlPreview' + index);
+        const previewImg = document.getElementById('urlPreviewImg' + index);
+        const url = urlInput.value.trim();
+        
+        if (url === '') {
+            previewWrapper.style.display = 'none';
+            return;
+        }
+        
+        // Use a temporary Image object to test if the URL loads an image
+        const testImg = new Image();
+        testImg.onload = function() {
+            previewImg.src = url;
+            previewWrapper.style.display = 'flex';
         };
-        reader.readAsDataURL(file);
-    });
-    $('imageCount').textContent = `${uploadedFiles.length} image${uploadedFiles.length!==1?'s':''} selected`;
-}
-function removeUploaded(i){
-    uploadedFiles.splice(i,1);
-    renderPreviews();
-}
-
-/* ----------------------- URL preview ----------------------- */
-document.querySelectorAll('.urlInput').forEach(inp=>{
-    inp.addEventListener('input', function(){
-        const idx = this.dataset.index;
-        const url = this.value.trim();
-        const prev = $(`urlPrev${idx}`);
-        const img = $(`urlImg${idx}`);
-        if (!url) { prev.style.display='none'; return; }
-        img.src = url;
-        img.onload = ()=>prev.style.display='block';
-        img.onerror = ()=>prev.style.display='none';
-    });
-});
-
-/* ----------------------- Auto-fill button text ----------------------- */
-$('buttonUrl').addEventListener('input', ()=>{
-    const url = $('buttonUrl').value.trim();
-    const txt = $('buttonText');
-    if (!txt.value && url) {
-        try {
-            const domain = new URL(url).hostname.replace(/^www\./,'');
-            txt.value = `Visit ${domain}`;
-        } catch(e) {}
+        testImg.onerror = function() {
+            // Hide if the image fails to load
+            previewWrapper.style.display = 'none';
+        };
+        testImg.src = url;
     }
-});
+    
+    // Auto-load previews on page load for pre-filled URLs
+    window.addEventListener('load', function() {
+        autoFillButtonText(); // Initialize button text
+        for (let i = 1; i <= 5; i++) {
+            const urlInput = document.getElementById('imageUrl' + i);
+            if (urlInput && urlInput.value.trim() !== '') {
+                previewUrl(i);
+            }
+        }
+    });
 
-/* ----------------------- Gemini AI generation ----------------------- */
-$('aiBtn').addEventListener('click', async ()=>{
-    const key = $('geminiApiKey').value.trim();
-    const name = $('productName').value.trim();
-    if (!key) return alert('Enter your Gemini API key first');
-    if (!name) return alert('Enter a product name');
-
-    const btn = $('aiBtn');
-    const orig = btn.textContent;
-    btn.disabled = true;
-    btn.textContent = 'Generating…';
-
-    const prompt = `You are a helpful product marketing assistant. Write 4 short sections for "${name}" in JSON:
-
-{
-  "whatIsIt": "2-3 sentences",
-  "whyNeedIt": "2-3 sentences",
-  "howWorks": "2-3 sentences",
-  "whatDifferent": "2-3 sentences"
-}
-
-Keep it friendly and concise.`;
-
-    try {
-        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`, {
-            method:'POST',
-            headers:{'Content-Type':'application/json'},
-            body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})
+    // Function to copy the output code to the clipboard
+    function copyCode() {
+        const code = document.getElementById('codeOutput').textContent;
+        navigator.clipboard.writeText(code).then(() => {
+            const btn = document.querySelector('.copy-btn');
+            const originalText = btn.textContent;
+            btn.textContent = '✅ Copied!';
+            btn.classList.add('copied');
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.classList.remove('copied');
+            }, 1500);
+        }).catch(err => {
+            alert('Could not copy text: ' + err);
+            console.error('Copy error:', err);
         });
-        const data = await res.json();
-        const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-        const jsonMatch = text.match(/\{[\s\S]*\}/);
-        if (!jsonMatch) throw new Error('No JSON found');
-
-        const content = JSON.parse(jsonMatch[0]);
-        $('whatIsIt').value = content.whatIsIt || '';
-        $('whyNeedIt').value = content.whyNeedIt || '';
-        $('howWorks').value = content.howWorks || '';
-        $('whatDifferent').value = content.whatDifferent || '';
-        btn.textContent = 'Done!';
-        setTimeout(()=>{ btn.textContent=orig; btn.disabled=false; },2000);
-    } catch(err){
-        console.error(err);
-        alert('Gemini error: '+err.message);
-        btn.textContent = orig;
-        btn.disabled = false;
     }
-});
 
-/* ----------------------- Image upload to ImgBB ----------------------- */
-async function uploadToImgBB(file) {
-    const key = $('imgbbKey').value.trim();
-    if (!key) throw new Error('ImgBB API key missing');
-    const fd = new FormData();
-    fd.append('image', file);
-    const res = await fetch(`https://api.imgbb.com/1/upload?key=${key}`, {method:'POST', body:fd});
-    const json = await res.json();
-    if (!json.success) throw new Error(json.error?.message || 'Upload failed');
-    return json.data.url;
+    // Core function to generate the final code
+    function generateCode() {
+        document.getElementById('generateBtn').disabled = true;
+        document.getElementById('outputSection').classList.remove('show');
+
+        // 1. Collect valid image URLs
+        const urlInputs = [
+            document.getElementById('imageUrl1').value.trim(),
+            document.getElementById('imageUrl2').value.trim(),
+            document.getElementById('imageUrl3').value.trim(),
+            document.getElementById('imageUrl4').value.trim(),
+            document.getElementById('imageUrl5').value.trim()
+        ].filter(url => url !== '');
+        
+        if (urlInputs.length === 0) {
+            alert('Please enter at least one valid image URL to generate the code!');
+            document.getElementById('generateBtn').disabled = false;
+            return;
+        }
+        
+        // 2. Get form values
+        const productName = escapeHtml(document.getElementById('productName').value || 'Your Product');
+        const overlayText = escapeHtml(document.getElementById('overlayText').value || 'Click the i for more info');
+        const overlayColor = document.getElementById('overlayColor').value || '#FFFFFF';
+        const overlaySize = document.getElementById('overlaySize').value || 18;
+        const buttonUrl = document.getElementById('buttonUrl').value.trim();
+        const buttonText = escapeHtml(document.getElementById('buttonText').value.trim() || document.getElementById('buttonText').placeholder || 'View Product');
+        
+        const whatIsIt = escapeHtml(document.getElementById('whatIsIt').value || 'Product description missing.');
+        const whyNeedIt = escapeHtml(document.getElementById('whyNeedIt').value || 'Benefits description missing.');
+        const howWorks = escapeHtml(document.getElementById('howWorks').value || 'Functionality description missing.');
+        const whatDifferent = escapeHtml(document.getElementById('whatDifferent').value || 'Unique selling proposition missing.');
+        
+        // 3. Generate the image list HTML for the slider
+        const imagesHtml = urlInputs.map((url, index) => {
+            // Apply the overlay only to the first image
+            if (index === 0) {
+                return `
+                    <div class="itabs-image" data-index="${index}" style="background-image: url('${url}');">
+                        <div class="itabs-overlay">
+                            <span style="color: ${overlayColor}; font-size: ${overlaySize}px;">${overlayText}</span>
+                            <span class="itabs-info-icon" onclick="openITabsModal(event)">i</span>
+                        </div>
+                    </div>
+                `;
+            } else {
+                return `
+                    <div class="itabs-image" data-index="${index}" style="background-image: url('${url}');"></div>
+                `;
+            }
+        }).join('');
+        
+        // 4. Construct the final output code (HTML + CSS + JS)
+        const finalCode = `
+<style>
+/* Base container style - max-width adjustable */
+.itabs-container {
+    max-width: 600px; 
+    margin: 20px auto;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+    font-family: Arial, sans-serif;
+}
+/* Image slider wrapper (holds all images side-by-side) */
+.itabs-image-wrapper {
+    display: grid;
+    grid-template-columns: repeat(${urlInputs.length}, 100%);
+    overflow-x: hidden;
+    scroll-snap-type: x mandatory;
+    transition: transform 0.3s ease-in-out;
+}
+.itabs-image {
+    width: 100%;
+    aspect-ratio: 1; /* Makes it a square */
+    background-size: cover;
+    background-position: center;
+    scroll-snap-align: start;
+    position: relative;
+    cursor: grab; /* Indicates it's draggable */
+}
+/* Info Overlay on the main image */
+.itabs-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4); 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+    padding: 20px;
+}
+.itabs-info-icon {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    background: #667eea;
+    color: white;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    transition: background 0.2s;
+    text-align: center;
+}
+.itabs-info-icon:hover {
+    background: #764ba2;
+}
+/* Modal Popup Styles */
+.itabs-modal {
+    display: none;
+    position: fixed;
+    z-index: 99999; /* High Z-index to ensure it is always on top */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.7);
+    padding-top: 60px;
+}
+.itabs-modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 30px;
+    border-radius: 12px;
+    max-width: 90%;
+    width: 500px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    animation: fadeIn 0.3s;
+}
+.itabs-close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+.itabs-close:hover, .itabs-close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+.itabs-modal-title {
+    color: #667eea;
+    font-size: 1.8em;
+    margin-bottom: 20px;
+    text-align: center;
+}
+/* Tab Navigation */
+.itabs-tab-nav {
+    display: flex;
+    border-bottom: 2px solid #e0e0e0;
+    margin-bottom: 20px;
+}
+.itabs-tab-btn {
+    padding: 10px 15px;
+    cursor: pointer;
+    border: none;
+    background: none;
+    font-weight: bold;
+    color: #888;
+    transition: color 0.2s, border-bottom 0.2s;
+    flex: 1;
+    text-align: center;
+    white-space: nowrap;
+}
+.itabs-tab-btn.active {
+    color: #667eea;
+    border-bottom: 3px solid #667eea;
+}
+.itabs-tab-content {
+    display: none;
+    line-height: 1.6;
+    color: #333;
+}
+.itabs-tab-content.active {
+    display: block;
+}
+/* Action Button */
+.itabs-button {
+    display: block;
+    width: 90%;
+    margin: 20px auto 0;
+    padding: 15px;
+    background: #667eea;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: background 0.2s;
+}
+.itabs-button:hover {
+    background: #764ba2;
 }
 
-/* ----------------------- Main generate ----------------------- */
-$('generateBtn').addEventListener('click', async ()=>{
-    // Determine which image source we have
-    const urlInputs = [...document.querySelectorAll('.urlInput')].map(i=>i.value.trim()).filter(Boolean);
-    const usingUrls = urlInputs.length > 0;
-    const usingFiles = uploadedFiles.length > 0;
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+</style>
 
-    if (!usingUrls && !usingFiles) return alert('Add at least one image (upload or URL)');
+<div class="itabs-container">
+    <div class="itabs-image-wrapper">${imagesHtml}</div>
+    
+    <div id="itabsModal" class="itabs-modal" onclick="closeITabsModal(event)">
+        <div class="itabs-modal-content" onclick="event.stopPropagation()">
+            <span class="itabs-close" onclick="closeITabsModal(event)">&times;</span>
+            <h3 class="itabs-modal-title">${productName}</h3>
 
-    let imageUrls = [];
+            <div class="itabs-tab-nav">
+                <button class="itabs-tab-btn active" data-tab="itabs-what">What</button>
+                <button class="itabs-tab-btn" data-tab="itabs-why">Why</button>
+                <button class="itabs-tab-btn" data-tab="itabs-how">How</button>
+                <button class="itabs-tab-btn" data-tab="itabs-diff">Unique</button>
+            </div>
 
-    $('generateBtn').disabled = true;
-    $('loading').classList.add('show');
-    $('outputSection').classList.remove('show');
-
-    try {
-        if (usingUrls) {
-            imageUrls = urlInputs;
-        } else {
-            const promises = uploadedFiles.map(uploadToImgBB);
-            imageUrls = await Promise.all(promises);
-        }
-
-        // Gather form data
-        const data = {
-            productName: escapeHtml($('productName').value || 'Product'),
-            overlayText: escapeHtml($('overlayText').value || 'Click the i for more info'),
-            overlaySize: $('overlaySize').value + 'px',
-            overlayColor: $('overlayColor').value,
-            whatIsIt: escapeHtml($('whatIsIt').value),
-            whyNeedIt: escapeHtml($('whyNeedIt').value),
-            howWorks: escapeHtml($('howWorks').value),
-            whatDifferent: escapeHtml($('whatDifferent').value),
-            buttonUrl: $('buttonUrl').value.trim(),
-            buttonText: $('buttonText').value.trim() || (()=> {
-                try { return 'Visit ' + new URL($('buttonUrl').value).hostname.replace(/^www\./,''); }
-                catch { return 'Learn More'; }
-            })()
-        };
-
-        const code = buildITabsCode(imageUrls, data);
-        $('codeOutput').textContent = code;
-        $('outputSection').classList.add('show');
-    } catch(err){
-        alert('Error: '+err.message);
-    } finally {
-        $('generateBtn').disabled = false;
-        $('loading').classList.remove('show');
-        if ($('outputSection').classList.contains('show')) {
-            $('outputSection').scrollIntoView({behavior:'smooth'});
-        }
-    }
-});
-
-/* ----------------------- Build final HTML ----------------------- */
-function buildITabsCode(imgs, d) {
-    let slides = '';
-    let dots = '';
-    imgs.forEach((url,i)=>{
-        slides += `<div style="min-width:100%;height:100%;">
-            <img src="${url}" alt="${d.productName} ${i+1}" style="width:100%;height:100%;object-fit:cover;">
-            ${i===0 ? `<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:${d.overlayColor};font-weight:bold;font-size:${d.overlaySize};text-shadow:2px 2px 8px rgba(0,0,0,.8);padding:10px;z-index:10;text-align:center;width:90%;">${d.overlayText}</div>` : ''}
-        </div>`;
-        const dotBg = i===0 ? 'white' : 'rgba(255,255,255,.5)';
-        dots += `<div class="itabs-dot" data-slide="${i}" style="width:10px;height:10px;border-radius:50%;background:${dotBg};cursor:pointer;transition:all .3s;border:2px solid white;"></div>`;
-    });
-
-    let popup = '';
-    const sections = [
-        {title:'What is it?', text:d.whatIsIt},
-        {title:'Why do I need it?', text:d.whyNeedIt},
-        {title:'How does it work?', text:d.howWorks},
-        {title:'What makes it different?', text:d.whatDifferent}
-    ];
-    sections.forEach(s=>{ if(s.text) popup += `<h4 style="color:#667eea;margin:25px 0 15px;">${s.title}</h4><p style="line-height:1.8;color:#4a5568;">${s.text}</p>`; });
-
-    if (d.buttonText && d.buttonUrl) {
-        popup += `<a href="${d.buttonUrl}" target="_blank" style="display:block;margin:30px 0;padding:15px;background:#4CAF50;color:#fff;text-align:center;text-decoration:none;border-radius:8px;font-weight:bold;">${d.buttonText}</a>`;
-    }
-
-    return `<!-- iTabs – Interactive Product Display -->
-<div style="background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 10px 40px rgba(0,0,0,.1);max-width:500px;margin:20px auto;">
-    <div style="position:relative;width:100%;height:350px;overflow:hidden;background:linear-gradient(135deg,#667eea,#764ba2);">
-        <div id="itabsTrack" style="display:flex;transition:transform .4s ease;height:100%;">
-            ${slides}
-        </div>
-        <div style="position:absolute;bottom:15px;left:50%;transform:translateX(-50%);display:flex;gap:8px;z-index:15;">
-            ${dots}
-        </div>
-        <div id="itabsCounter" style="position:absolute;bottom:15px;right:15px;background:rgba(0,0,0,.6);color:#fff;padding:5px 12px;border-radius:15px;font-size:14px;font-weight:bold;z-index:15;">1/${imgs.length}</div>
-        <div style="position:absolute;top:20px;right:20px;width:45px;height:45px;background:rgba(255,255,255,.95);color:#667eea;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:24px;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,.2);border:3px solid white;z-index:20;" onclick="document.getElementById('itabsPopup').style.display='flex'">i</div>
-    </div>
-    <div style="padding:25px;text-align:center;">
-        <h3 style="margin-bottom:10px;color:#2d3748;">${d.productName}</h3>
-        <p style="color:#718096;">${imgs.length>1?'Swipe to see more images':'Click the i button for details'}</p>
-    </div>
-</div>
-
-<div id="itabsPopup" style="display:none;position:fixed;z-index:1000;inset:0;background:rgba(0,0,0,.8);display:flex;align-items:center;justify-content:center;padding:20px;">
-    <div style="background:#fff;border-radius:20px;width:90%;max-width:600px;max-height:80vh;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.4);">
-        <div style="background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;padding:30px;display:flex;justify-content:space-between;align-items:center;">
-            <h3 style="margin:0;font-size:1.8em;">${d.productName}</h3>
-            <button onclick="this.closest('#itabsPopup').style.display='none'" style="background:none;border:none;color:#fff;font-size:40px;cursor:pointer;">×</button>
-        </div>
-        <div style="padding:35px;max-height:calc(80vh - 120px);overflow-y:auto;">
-            ${popup}
+            <div id="itabs-what" class="itabs-tab-content active">${whatIsIt}</div>
+            <div id="itabs-why" class="itabs-tab-content">${whyNeedIt}</div>
+            <div id="itabs-how" class="itabs-tab-content">${howWorks}</div>
+            <div id="itabs-diff" class="itabs-tab-content">${whatDifferent}</div>
+            
+            ${buttonUrl ? `<a href="${buttonUrl}" target="_blank" class="itabs-button">${buttonText}</a>` : ''}
         </div>
     </div>
 </div>
 
 <script>
-var slide=0,total=${imgs.length};
-function go(n){ slide=(n+total)%total; update(); }
-function update(){
-    document.getElementById('itabsTrack').style.transform='translateX(-'+(slide*100)+'%)';
-    document.getElementById('itabsCounter').textContent=(slide+1)+'/${imgs.length}';
-    document.querySelectorAll('.itabs-dot').forEach((d,i)=>d.style.background=i===slide?'white':'rgba(255,255,255,.5)');
-}
-document.querySelectorAll('.itabs-dot').forEach(d=>d.addEventListener('click',()=>go(+d.dataset.slide)));
-document.getElementById('itabsTrack').addEventListener('touchstart',e=>start=e.changedTouches[0].screenX);
-document.getElementById('itabsTrack').addEventListener('touchend',e=>{
-    let diff = e.changedTouches[0].screenX - start;
-    if (Math.abs(diff)>50) go(slide + (diff<0?1:-1));
-});
-document.getElementById('itabsPopup').addEventListener('click',e=>{ if(e.target.id==='itabsPopup') e.target.style.display='none'; });
-update();
-</script>`;
-}
+    // --- iTabs Runtime JavaScript ---
+    
+    // 1. Modal Control
+    function openITabsModal(e) {
+        e.stopPropagation();
+        document.getElementById('itabsModal').style.display = 'block';
+    }
+    
+    function closeITabsModal(e) {
+        // Only close if the background (modal itself) or the close button is clicked
+        if (e.target.id === 'itabsModal' || e.target.className === 'itabs-close') {
+            document.getElementById('itabsModal').style.display = 'none';
+        }
+    }
+    
+    // 2. Tab Switching Logic inside the modal (must be executed after modal loads)
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.itabs-tab-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                // Deactivate all buttons and content
+                document.querySelectorAll('.itabs-tab-btn').forEach(btn => btn.classList.remove('active'));
+                document.querySelectorAll('.itabs-tab-content').forEach(content => content.classList.remove('active'));
 
-/* ----------------------- Copy button ----------------------- */
-$('copyBtn').addEventListener('click', ()=>{
-    navigator.clipboard.writeText($('codeOutput').textContent).then(()=>{
-        const b = $('copyBtn');
-        b.textContent='Copied!';
-        setTimeout(()=>{ b.textContent='Copy Code'; },2000);
+                // Activate the clicked button and corresponding content
+                this.classList.add('active');
+                const targetId = this.getAttribute('data-tab');
+                document.getElementById(targetId).classList.add('active');
+            });
+        });
     });
-});
+
+    // 3. Optional: Add drag/swipe functionality for the image gallery
+    const wrappers = document.querySelectorAll('.itabs-image-wrapper');
+    wrappers.forEach(wrapper => {
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+
+        wrapper.addEventListener('mousedown', (e) => {
+            isDown = true;
+            wrapper.style.cursor = 'grabbing';
+            startX = e.pageX - wrapper.offsetLeft;
+            scrollLeft = wrapper.scrollLeft;
+        });
+
+        wrapper.addEventListener('mouseleave', () => {
+            isDown = false;
+            wrapper.style.cursor = 'grab';
+        });
+
+        wrapper.addEventListener('mouseup', () => {
+            isDown = false;
+            wrapper.style.cursor = 'grab';
+        });
+
+        wrapper.addEventListener('mousemove', (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - wrapper.offsetLeft;
+            const walk = (x - startX) * 2; // Scroll faster
+            wrapper.scrollLeft = scrollLeft - walk;
+        });
+    });
+</script>
+        `;
+        
+        // 5. Output the code to the screen
+        document.getElementById('codeOutput').textContent = finalCode;
+        document.getElementById('outputSection').classList.add('show');
+        document.getElementById('generateBtn').disabled = false;
+    }
 </script>
 </body>
 </html>
